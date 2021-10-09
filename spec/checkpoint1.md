@@ -4,7 +4,7 @@ The first checkpoint in this project is designed to guide the development of a t
 **TODO TODO TODO INCLUDE DIAGRAM OF PROJECT OVERVIEW**
 %\begin{figure}[hbt]
 %\begin{center}
-%  \includegraphics[width=0.7\textwidth]{sp21_overview.pdf}
+%  \includegraphics[width=0.7\textwidth]{fa21_overview.pdf}
 %  \caption{High-level overview of the full system}
 %  \label{fig:sys_overview}
 %\end{center}
@@ -35,92 +35,72 @@ To get a team repo, fill the \href{https://docs.google.com/forms/d/1hOJek4q_Z6So
 Whenever you resume your work on the project, it is highly suggested that you do `git pull` from the skeleton repo to get the latest update.
 Update announcements will be posted to Piazza.
 
-\subsection{Integrate Designs from Labs} \label{sec:past_designs}
-You should copy some modules you designed from the labs.
-We suggest you keep these with the provided source files in \verb|hardware/src/io_circuits| (overwriting any provided skeletons).
+## Integrate Designs from Labs
+You should copy some modules you designed from the labs into `hardware/src/io_circuits`.
 
-\textbf{Copy these files from the labs:}
-\begin{minted}{bash}
-  debouncer.v
-  synchronizer.v
-  edge_detector.v
-  fifo.v
-  uart_transmitter.v
-\end{minted}
+**Copy these files**:
+```text
+debouncer.v
+synchronizer.v
+edge_detector.v
+fifo.v
+uart_transmitter.v
+```
 
-\subsection{Project Skeleton Overview}
-\begin{itemize}
-  \item \texttt{hardware}
-    \begin{itemize}
-      \item \texttt{src}
-        \begin{itemize}
-          \item \texttt{z1top.v}: Top level module. The RISC-V CPU is instantiated here.
-          \item \texttt{riscv\_core/Riscv151.v}: All of your CPU datapath and control should be contained in this file.
-          \item \texttt{io\_circuits}: Your IO circuits from previous lab exercises.
-          \item \texttt{EECS151.v}: Our EECS151-SP21 library file of register and memory modules. \textbf{You are expected to use these modules for your sequential logic}.
-        \end{itemize}
-      \item \texttt{sim}
-        \begin{itemize}
-          \item \verb|Riscv151_testbench.v|: Starting point for testing your CPU. The testbench checks if your CPU can execute all the RV32I instructions (including CSR ones) correctly, and can handle some simple hazards. You should make sure that your CPU implementation passes this testbench before moving on.
-          \item \verb|assembly_testbench.v|: The testbench works with the software in \texttt{software/assembly\_tests}.
-          \item \verb|isa_testbench.v|: The testbench works with the RISC-V ISA test suite in
+## Project Skeleton Overview
+- `hardware`
+  - `src`
+    - `z1top.v`: Top level module. The RISC-V CPU is instantiated here.
+    - `riscv_core/Riscv151.v`: All of your CPU datapath and control should be contained in this file.
+    - `io_circuits`: Your IO circuits from the labs.
+  - `sim`
+    - `Riscv151_testbench.v`: Starting point for testing your CPU. The testbench checks if your CPU can execute all the RV32I instructions (including CSR ones) correctly, and can handle some simple hazards. You should make sure that your CPU implementation passes this testbench before moving on.
+    - `assembly_testbench.v`: The testbench works with the software in `software/assembly_tests`.
+    - `isa_testbench.v`: The testbench works with the RISC-V ISA test suite in `software/riscv-isa-tests`. The testbench only runs one test at a time. To run multiple tests, use the script we provide (see [RISC-V ISA Tests](#riscv-isa-tests). There are a total of 38 ISA tests in the test suite.
+    - `echo_testbench.v`: The testbench works with the software in `software/echo`. The CPU reads a character sent from the serial rx line and echoes it back to the serial tx line.
+    - `bios_testbench.v`: The testbench works with the BIOS program. The testbench checks if your CPU can execute the instructions stored in the BIOS memory. The testbench also emulates user input sent over the serial rx line, and checks the BIOS message output obtained from the serial tx line.
+    - `software_testbench.v`: The testbench works with some software programs in `software/`. This is an extra test for debugging.
+    - `c_testbench.v`: The testbench works with the software in `software/c_test`. This is an extra test for debugging.
+- `software`
+  - `bios`: The BIOS program, which allows us to interact with our CPU via the UART. You need to compile it before creating a bitstream or running a simulation.
+  - `echo`: The echo program, which emulates the echo test of Lab 5 in software.
+  - `assembly_tests`: Use this as a template to write assembly tests for your processor designed to run in simulation.
+  - `c_example`: Use this as an example to write C programs.
+  - `riscv-isa-tests`: A comprehensive test suite for your CPU. Available after doing `git submodule` (see [RISC-V ISA Tests](#riscv-isa-tests)).
+  - `mmult`: This is a program to be run on the FPGA for Checkpoint 1. It generates 2 matrices and multiplies them. Then it returns a checksum to verify the correct result.
 
-\texttt{software/riscv-isa-tests}.
+To compile `software` go into a program directory and run `make`.
+To build a bitstream run `make impl` in `hardware`.
 
-The testbench only runs one test at a time. To run multiple tests, use the script we provide (see \ref{riscv-isa-tests}). There is a total of 38 ISA tests in the test suite.
-        \end{itemize}
-          \item \verb|echo_testbench.v|: The testbench works with the software in \texttt{software/echo}. The CPU reads a character sent from the serial rx line and echoes it back to the serial tx line.
-          \item \verb|bios_testbench.v|: The testbench works with the BIOS program. The testbench checks if your CPU can execute the instructions stored in the BIOS memory. The testbench also emulates user input sent over the serial rx line, and checks the BIOS message output obtained from the serial tx line.
-          \item \verb|software_testbench.v|: The testbench works with some software programs in \texttt{software/}. This is an extra test for debugging.
-          \item \verb|c_testbench.v|: The testbench works with the software in \texttt{software/c\_test}. This is an extra test for debugging.
+## RISC-V 151 ISA
+The [table here](./isa.pdf) contains all of the instructions your processor is responsible for supporting.
+It contains most of the instructions specified in the RV32I Base Instruction set, and allows us to maintain a relatively simple design while still being able to use a C compiler and write interesting programs to run on the processor.
+For the specific details of each instruction, refer to sections 2.2 through 2.6 in the [RISC-V ISA Manual](https://riscv.org/wp-content/uploads/2017/05/riscv-spec-v2.2.pdf).
 
-    \end{itemize}
-  \item \texttt{software}
-    \begin{itemize}
-      \item \verb|bios151v3|: The BIOS program, which allows us to interact with our CPU via the UART. You need to compile it before creating a bitstream or running a simulation.
-      \item \verb|echo|: The echo program, which emulates the echo test of Lab 5 in software.
-      \item \verb|assembly_tests|: Use this as a template to write assembly tests for your processor designed to run in simulation.
-      \item \verb|c_example|: Use this as an example to write C programs.
-      \item \verb|riscv-isa-tests|: A comprehensive test suite for your CPU. Available after doing \verb|git submodule| (see \ref{riscv-isa-tests}).
-      \item \verb|mmult|: This is a program to be run on the FPGA for Checkpoint 2. It generates 2 matrices and multiplies them. Then it returns a checksum to verify the correct result.
-    \end{itemize}
-\end{itemize}
-
-To compile \texttt{software} go into a program directory and run \texttt{make}.
-To build a bitstream run \texttt{make write-bitstream} in \texttt{hardware}.
-
-\subsection{RISC-V 151 ISA}
-Table \ref{tab:ISA} contains all of the instructions your processor is responsible for supporting.
-It contains most of the instructions specified in the RV32I Base Instruction set, and allows us to maintain a relatively simple design while still being able to have a C compiler and write interesting programs to run on the processor.
-For the specific details of each instruction, refer to sections 2.2 through 2.6 in the \href{https://github.com/riscv/riscv-isa-manual/releases/download/Ratified-IMAFDQC/riscv-spec-20191213.pdf}{RISC-V Instruction Set Manual}.
-
-\subsubsection{CSR Instructions}
+### CSR Instructions
 You will have to implement 2 CSR instructions to support running the standard RISC-V ISA test suite.
 A CSR (or control status register) is some state that is stored independent of the register file and the memory.
-While there are $2^{12}$ possible CSR addresses, you will only use one of them (\texttt{tohost = 0x51E}).
-The \texttt{tohost} register is monitored by the RISC-V ISA testbench (\verb|isa_testbench.v|), and simulation ends when a non-zero value is written to this register.
+While there are `2^12` possible CSR addresses, you will only use one of them `tohost = 0x51E`).
+The `tohost` register is monitored by the RISC-V ISA testbench (`isa_testbench.v`), and simulation ends when a non-zero value is written to this register.
 A CSR value of 1 indicates success, and a value greater than 1 indicates which test failed.
 
 There are 2 CSR related instructions that you will need to implement:
-\begin{enumerate}
-  \item \texttt{csrw tohost,x2}  (short for \texttt{csrrw x0,csr,rs1} where \texttt{csr = 0x51E})
-  \item \texttt{csrwi tohost,1}  (short for \texttt{csrrwi x0,csr,uimm} where \texttt{csr = 0x51E})
-\end{enumerate}
+  - `csrw tohost, x2` (short for `csrrw x0, csr, rs1` where `csr = 0x51E`)
+  - `csrwi tohost, 1` (short for `csrrwi x0, csr, uimm` where `csr = 0x51E`)
 
-\texttt{csrw} will write the value from \texttt{rs1} into the addressed CSR.
-\texttt{csrwi} will write the immediate (stored in the rs1 field in the instruction) into the addressed CSR.
-Note that you do not need to write to \texttt{rd} (writing to x0 does nothing), since the CSR instructions are only used in simulation.
+`csrw` will write the value from `rs1` into the addressed CSR.
+`csrwi` will write the immediate (stored in the `rs1` field of the instruction) into the addressed CSR.
+Note that you do not need to write to `rd` (writing to x0 does nothing), since the CSR instructions are only used in simulation.
 
-\input{isa.tex}
-
-\subsection{Pipelining}
+## Pipelining
 Your CPU must implement this instruction set using a 3-stage pipeline.
 The division of the datapath into three stages is left unspecified as it is an important design decision with significant performance implications.
 We recommend that you begin the design process by considering which elements of the datapath are synchronous and in what order they need to be placed.
-After determining the design blocks that require a clock edge, consider where to place asynchronous blocks to minimize the critical path.
-The RAMs we are using for the data, instruction, and BIOS memories are both \textbf{synchronous} read and \textbf{synchronous} write.
 
-\subsection{Hazards}
+After determining the design blocks that require a clock edge, consider where to place asynchronous blocks to minimize the critical path.
+The RAMs we are using for the data, instruction, and BIOS memories are both **synchronous** read and **synchronous** write.
+
+## Hazards
 As you have learned in lecture, pipelines create hazards.
 Your design will have to resolve both control and data hazards.
 You must resolve data hazards by implementing forwarding whenever possible.
@@ -395,7 +375,7 @@ If the testbench times out it means \verb|x20| never became 1, so the processor 
 
 You should add your own tests to verify that your processor can execute different instructions correctly. Modify the file \verb|start.s| to add your assembly code, then rerun the RTL simulation.
 
-\subsection{RISC-V ISA Tests}\label{riscv-isa-tests}
+## RISC-V ISA Tests
 You will need the CSR instructions to work before you can use this test suite, and you should have confidence in your hand-written assembly tests.
 Test the CSR instructions using hand assembly tests.
 
@@ -516,7 +496,7 @@ To run the BIOS:
   \item Use screen to access the serial port:
     \begin{minted}[tabsize=2]{bash}
     screen $SERIALTTY 115200
-    # or 
+    # or
     # screen /dev/ttyUSB0 115200
     \end{minted}
   \item Press the reset button to make the CPU PC go to the start of BIOS memory
@@ -680,14 +660,14 @@ addi x1, x2, 100
  addi x1, x1, 100
 
 \item How do you handle branch control hazards? (What is the mispredict latency, what prediction scheme are you using, are you just injecting NOPs until the branch is resolved, what about data hazards in the branch?)
-\item How do you handle jump control hazards? Consider jal and jalr separately. What optimizations can be made to special-case handle jal? 
+\item How do you handle jump control hazards? Consider jal and jalr separately. What optimizations can be made to special-case handle jal?
 \item What is the most likely critical path in your design?
 \item Where do the UART modules, instruction, and cycle counters go? How are you going to drive \verb|uart_tx_data_in_valid| and \verb|uart_rx_data_out_ready| (give logic expressions)?
 \item What is the role of the CSR register? Where does it go?
 \item When do we read from BIOS for instructions? When do we read from IMem for instructions? How do we switch from BIOS address space to IMem address space? In which case can we write to IMem, and why do we need to write to IMem? How do we know if a memory instruction is intended for DMem or any IO device?
 \end{enumerate}
 
-Commit your block diagram and your writeup to your team repository under \verb|sp21_teamXX/docs| by \blockDiagramDueDate. Please also remember to push your working IO circuits to your Github repository.
+Commit your block diagram and your writeup to your team repository under \verb|fa21_teamXX/docs| by \blockDiagramDueDate. Please also remember to push your working IO circuits to your Github repository.
 
 \subsubsection{\baseCPUTaskName: Base RISCV151 System}
 This checkpoint requires a fully functioning three stage RISC-V CPU as described in this specification.

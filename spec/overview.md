@@ -26,7 +26,7 @@ Here is a description of each checkpoint and how many weeks will be alloted to e
 ### Checkpoint 0 (CPU Pipeline Diagram)
 - **Due:** October 22, Friday (1 week)
 - Draw a schematic of your processor's datapath and pipeline stages, and provide a brief writeup of your answers to the questions in ~\ref{sec:chkpt1_questions}.
-- Push all of your IO-circuit Verilog modules that you have implemented in the labs to your assigned project Github repository in `hardware/src/io_circuits` (see ~\ref{sec:past_designs}).
+- Push all of your IO-circuit Verilog modules that you have implemented in the labs to your assigned project Github repository in `hardware/src/io_circuits` (see [Integrate Designs From Labs](./checkpoint1.md#integrate-designs-from-labs)).
 - Commit your design documents (block diagram + writeup) to `docs`.
 
 ### Checkpoint 0.5 (Decoder + ALU Implementation and Testbench)
