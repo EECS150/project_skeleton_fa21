@@ -1,4 +1,4 @@
-# Checkpoint 1: 3 Stage Pipelined RISC-V CPU
+# Checkpoint 1: 3-Stage Pipelined RISC-V CPU
 The first checkpoint in this project is designed to guide the development of a three-stage pipelined RISC-V CPU that will be used as a base system in subsequent checkpoints.
 
 ## Project Overview
