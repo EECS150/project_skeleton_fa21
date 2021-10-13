@@ -1,14 +1,14 @@
-# Checkpoint 1: 3-Stage Pipelined RISC-V CPU
+# Checkpoint 0/1: 3-Stage Pipelined RISC-V CPU
 The first checkpoint in this project is designed to guide the development of a three-stage pipelined RISC-V CPU that will be used as a base system in subsequent checkpoints.
 
 ## Project Overview
 <p align=center>
-  <img height=700 src="./figs/fa19_overview.svg"/>
+  <img height=700 src="./figs/fa21_overview.svg"/>
 </p>
 
-- The green (RISC-V core) block on the diagram is the focus of the first and second checkpoints.
-- The third checkpoint will add audio and IO components in blue.
-- Finally, the fourth checkpoint will implement the power management unit in red.
+- The green (RISC-V core) block on the diagram is the focus of Checkpoints 0 and 1.
+- Checkpoint 2 will add audio and IO components in blue.
+- Finally, Checkpoint 3 will implement the BPM (beats per minute) detector unit in red.
 
 ## Setting up Your Repository
 The project skeleton files are available on Github.
@@ -296,7 +296,7 @@ There are several files:
       Edit this file to move the top of the stack.
       Typically your stack pointer is set to the top of the data memory address space, so that the stack has enough room to grow downwards.
 - `c_example.ld`: This linker script sets the base address of the program.
-      For Checkpoint 2, this address should be in the format `0x1000xxxx`
+      For Checkpoint 1, this address should be in the format `0x1000xxxx`
       The .text segment offset is typically set to the base of the instruction memory address space.
 - `c_example.elf`: Binary produced after running `make`.\\Use `riscv64-unknown-elf-objdump -Mnumeric -D c_example.elf` to view the assembly code.
 - `c_example.dump`: Assembly dump of the binary.
@@ -523,7 +523,7 @@ However, do NOT under any circumstances share source code.
 Once you're tired, go home and **sleep**. When you come back you will know how to solve your problem.
 
 ### How To Get Started
-It might seem overwhelming to implement all the functionality that your processor must support. The best way to implement your processor is in small increments, checking the correctness of your processor at each step along the way. Here is a guide that should help you plan out Checkpoint 1 and 2:
+It might seem overwhelming to implement all the functionality that your processor must support. The best way to implement your processor is in small increments, checking the correctness of your processor at each step along the way. Here is a guide that should help you plan out Checkpoint 0 and 1:
 
 - **Design.** You should start with a comprehensive and detailed design/schematic. Enumerate all the control signals that you will need. Be careful when designing the memory fetch stage since all the memories we use (BIOS, instruction, data, IO) are synchronous.
 - **First steps.** Implementing some modules that are easy to write and test.
@@ -548,8 +548,8 @@ The checkoff is divided into two stages: block diagram/design and implementation
 The second part will require significantly more time and effort than the first one.
 As such, completing the block diagram in time for the design review is crucial to your success in this project.
 
-### Checkpoint 1: Block Diagram
-The first checkpoint requires a detailed block diagram of your datapath. The diagram should have a greater level of detail than a high level RISC datapath diagram.
+### Checkpoint 0: Block Diagram
+This checkpoint requires a detailed block diagram of your datapath. The diagram should have a greater level of detail than a high level RISC datapath diagram.
 You may complete this electronically or by hand.
 
 If working by hand, we recommend working in pencil and combining several sheets of paper for a larger workspace. If doing it electronically, you can use Inkscape, Google Drawings, draw.io or any program you want.
@@ -606,7 +606,7 @@ addi x1, x1, 100
 
 Commit your block diagram and your writeup to your team repository under `fa21_teamXX/docs` by \blockDiagramDueDate. Please also remember to push your working IO circuits to your Github repository.
 
-### Checkpoint 2: Base RISCV151 System
+### Checkpoint 1: Base RISCV151 System
 This checkpoint requires a fully functioning three stage RISC-V CPU as described in this specification.
 Checkoff will consist of a demonstration of the BIOS functionality, loading a program (`echo` and `mmult`) over the UART, and successfully jumping to and executing the program.
 
@@ -614,7 +614,7 @@ Additionally, please find the maximum achievable frequency of your CPU implement
 
 \textbf{\baseCPUTaskName \space materials should be committed to your project repository by \baseCPUDueDate.}
 
-### Checkpoints 1 & 2 Deliverables Summary
+### Checkpoints 0 & 1 Deliverables Summary
 \begin{center}
   \begin{tabular}{m{45mm} m{40mm} m{70mm}}
     \toprule
