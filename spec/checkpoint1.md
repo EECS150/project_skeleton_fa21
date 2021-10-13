@@ -615,18 +615,6 @@ Additionally, please find the maximum achievable frequency of your CPU implement
 \textbf{\baseCPUTaskName \space materials should be committed to your project repository by \baseCPUDueDate.}
 
 ### Checkpoints 0 & 1 Deliverables Summary
-\begin{center}
-  \begin{tabular}{m{45mm} m{40mm} m{70mm}}
-    \toprule
-    \textbf{Deliverable} & \textbf{Due Date} & \textbf{Description} \\
-    \midrule
-    Block Diagram, RISC-V ISA Questions, IO code & \blockDiagramDueDate & Push your block diagram, your writeup, and IO code to your Github repository. \linebreak In-lab Checkoff: Sit down with a GSI and go over your design in detail. \\
-    \midrule
-    RISC-V CPU, Fmax and Crit. path & \baseCPUDueDate & Check in code to Github. \linebreak In-lab Checkoff: Demonstrate that the BIOS works, you can use `hex_to_serial` to load the `echo` program, `jal` to it from the BIOS, and have that program successfully execute. Load the mmult program with `hex_to_serial`, `jal` to it, and have it execute successfully and return the benchmarking results and correct checksum. Your CPI should not be greater than 1.2\\
-    \bottomrule
-  \end{tabular}
-\end{center}
-
 | Deliverable                                  | Due Date | Description                                                                                                                                                                                                                                                                                                                                                                                            |
 |----------------------------------------------|----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Block Diagram, RISC-V ISA Questions, IO code |          | Push your block diagram, your writeup, and IO code to your Github repository. In-lab Checkoff: Sit down with a GSI and go over your design in detail.                                                                                                                                                                                                                                                  |
