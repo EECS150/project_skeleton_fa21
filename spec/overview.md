@@ -23,30 +23,30 @@ The project is organized into several checkpoints to help you track your progres
 Here is a description of each checkpoint and how many weeks will be alloted to each one.
 *Note*: this schedule is tentative and is subject to change.
 
-### Checkpoint 0 (CPU Pipeline Diagram)
+### Checkpoint 1 (CPU Pipeline Diagram)
 - **Due:** October 22, Friday (1 week)
 - Draw a schematic of your processor's datapath and pipeline stages, and provide a brief writeup of your answers to the questions in ~\ref{sec:chkpt1_questions}.
 - Push all of your IO-circuit Verilog modules that you have implemented in the labs to your assigned project Github repository in `hardware/src/io_circuits` (see [Integrate Designs From Labs](./checkpoint1.md#integrate-designs-from-labs)).
 - Commit your design documents (block diagram + writeup) to `docs`.
 
-### Checkpoint 0.5 (Decoder + ALU Implementation and Testbench)
+### Checkpoint 1.5 (Decoder + ALU Implementation and Testbench)
 - **Due:** October 29, Friday (1 week)
 
-### Checkpoint 1 (Pipelined RISC-V CPU)
+### Checkpoint 2 (Pipelined RISC-V CPU)
 - **Due:** November 12, Friday (2 weeks)
 - Implement a fully functional RISC-V processor core in Verilog. Your processor core should be able to run the \textbf{mmult} demo successfully.
 - See the [checkpoint 1 spec](./checkpoint1.md)
 
-### Checkpoint 2 (IO / Audio Circuit Integration)
+### Checkpoint 3 (IO / Audio Circuit Integration)
 - **Due:** November 19, Friday (1 week)
 - Integrate the FPGA board buttons/LEDs as CPU controllable IOs
 - Integrate the NCO and DAC as memory mapped devices
 
-### Checkpoint 3 (BPM Detector)
+### Checkpoint 4 (BPM Detector)
 - **Due:** December 3rd, Friday (2 weeks) (final day of class)
 - Implement a memory-mapped hardware-accelerated BPM detector
 
-### Checkpoint 4 (Optimization)
+### Checkpoint 5 (Optimization)
 - **Due:** December 3rd, Friday (2 weeks) (final day of class)
 
 ### Final Checkoff

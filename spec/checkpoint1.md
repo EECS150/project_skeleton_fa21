@@ -113,7 +113,7 @@ You'll have to deal with the following types of hazards:
 We have provided a register file module for you in `EECS151.v: ASYNC_RAM_1W2R`. The register file has two asynchronous-read ports and one synchronous-write port (positive edge). In addition, you should ensure that register 0 is not writable in your own logic, i.e. reading from register 0 always returns 0.
 
 ## RAMs
-In this project, we will be using some memory blocks defined in `EECS151.v` to implement memories for the processor. As you may recall in previous lab exercises, the memory blocks can be either synthesized to Block RAMs or LUTRAMs on FPGA. 
+In this project, we will be using some memory blocks defined in `EECS151.v` to implement memories for the processor. As you may recall in previous lab exercises, the memory blocks can be either synthesized to Block RAMs or LUTRAMs on FPGA.
 For the project, our memory blocks will be mapped to Block RAMs. Therefore, read and write to memory are **synchronous**.
 
 ### Initialization
@@ -369,10 +369,10 @@ of the program and initializes \texttt{IMem} and \texttt{DMem} in
 `hardware/sim/software_testbench.v` for testing.
 Some available C programs are:
 
-`software/strcmp/strcmp.c`, 
-`software/vecadd/vecadd.c`, 
-`software/fib/fib.c`, 
-`software/sum/sum.c`, 
+`software/strcmp/strcmp.c`,
+`software/vecadd/vecadd.c`,
+`software/fib/fib.c`,
+`software/sum/sum.c`,
 `software/replace/replace.c`,
 `software/cachetest/cachetest.c`
 
