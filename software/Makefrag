@@ -1,7 +1,9 @@
 RISCV := riscv64-unknown-elf
 
-LIB_PATH := ../151_library
-LIB_SOURCES := $(wildcard ../151_library/*.c)
+# get the absolute path of this Makefrag
+MAKEFRAG_PATH := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+LIB_PATH := $(MAKEFRAG_PATH)151_library
+LIB_SOURCES := $(wildcard $(LIB_PATH)/*.c)
 CSRCS := $(wildcard *.c)
 SSRCS := $(wildcard *.s)
 LDSRC := $(TARGET).ld
