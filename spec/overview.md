@@ -64,3 +64,7 @@ Aside from the final project report (you will need to turn in a report documenti
 Finish the required features first.
 Attempt extra features after everything works well.
 **If your submitted project does not work by the final deadline, you will not get any credit for any extra credit features you have implemented.**
+
+### Local Development
+You can build and run everything for this project from your laptop.
+See the [local development doc](./local_dev.md) for the details.

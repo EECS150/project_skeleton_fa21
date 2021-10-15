@@ -5,6 +5,9 @@
 `define OPCODE
 
 // ***** Opcodes *****
+// CSR instructions
+`define OPC_CSR 7'b1110011
+
 // Special immediate instructions
 `define OPC_LUI         7'b0110111
 `define OPC_AUIPC       7'b0010111
@@ -73,4 +76,6 @@
 `define FNC2_SRL        1'b0
 `define FNC2_SRA        1'b1
 
+`define FNC7_0  7'b0000000 // ADD, SRL
+`define FNC7_1  7'b0100000 // SUB, SRA
 `endif //OPCODE
