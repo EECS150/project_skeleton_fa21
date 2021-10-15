@@ -1,0 +1,29 @@
+RISCV := riscv64-unknown-elf
+
+LIB_PATH := ../151_library
+LIB_SOURCES := $(wildcard ../151_library/*.c)
+CSRCS := $(wildcard *.c)
+SSRCS := $(wildcard *.s)
+LDSRC := $(TARGET).ld
+
+GCC_OPTS += -mabi=ilp32 -march=rv32i -static -mcmodel=medany -nostdlib -nostartfiles -T $(LDSRC)
+
+default: $(TARGET).elf
+
+SOURCES = $(CSRCS) $(SSRCS)
+ifeq ($(INCLUDE_LIB), true)
+	SOURCES += $(LIB_SOURCES)
+endif
+
+# objdump is called before strip because it inlines functions and makes the assembly harder to read
+$(TARGET).elf: $(SOURCES)
+	$(RISCV)-gcc $(GCC_OPTS) -I$(LIB_PATH) $^ -o $@
+	$(RISCV)-objdump -D -Mnumeric $@ > $(basename $@).dump
+	$(RISCV)-strip -R .comment -R .note.gnu.build-id -R .riscv.attributes $@
+	$(RISCV)-objcopy $(basename $@).elf -O binary $(basename $@).bin
+	$(RISCV)-bin2hex -w 32 $(basename $@).bin $(basename $@).hex
+
+clean:
+	rm -f *.elf *.dump *.hex *.bin
+
+.PHONY: target
