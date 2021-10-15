@@ -7,6 +7,7 @@ module imem (
   input [13:0] addrb,
   output reg [31:0] doutb
 );
+  parameter DEPTH = 16384;
   reg [31:0] mem [16384-1:0];
 
   always @(posedge clk) begin

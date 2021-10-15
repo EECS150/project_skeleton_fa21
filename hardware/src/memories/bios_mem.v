@@ -7,6 +7,7 @@ module bios_mem (
     input [11:0] addrb,
     output reg [31:0] doutb
 );
+    parameter DEPTH = 4096;
     reg [31:0] mem [4096-1:0];
     always @(posedge clk) begin
         if (ena) begin
@@ -20,7 +21,7 @@ module bios_mem (
         end
     end
 
-    `define STRINGIFY_BIOS(x) `"x/../software/bios151v3/bios151v3.hex`"
+    `define STRINGIFY_BIOS(x) `"x/../software/bios/bios.hex`"
     `ifdef SYNTHESIS
         initial begin
             $readmemh(`STRINGIFY_BIOS(`ABS_TOP), mem);

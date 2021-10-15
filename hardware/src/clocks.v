@@ -47,7 +47,12 @@ module clocks #(
         // Other control and status signals
         .LOCKED              (cpu_clk_locked),
         .PWRDWN              (1'b0),
-        .RST                 (1'b0)
+        .RST                 (1'b0),
+        .DCLK                (1'b0),
+        .DEN                 (1'b0),
+        .DI                  (16'd0),
+        .DWE                 (1'b0),
+        .DADDR               (7'd0)
     );
     /* lint_on */
 
@@ -83,7 +88,12 @@ module clocks #(
         // Other control and status signals
         .LOCKED              (pwm_clk_locked),
         .PWRDWN              (1'b0),
-        .RST                 (1'b0)
+        .RST                 (1'b0),
+        .DCLK                (1'b0),
+        .DEN                 (1'b0),
+        .DI                  (16'd0),
+        .DWE                 (1'b0),
+        .DADDR               (7'd0)
     );
     /* lint_on */
 endmodule
