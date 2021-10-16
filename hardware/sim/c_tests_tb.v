@@ -1,12 +1,17 @@
 `timescale 1ns/1ns
 `include "mem_path.vh"
 
-module isa_tb();
+// This testbench consolidates all the software tests that relies on the CSR check.
+// A software test is compiled to a hex file, then loaded to the testbench for simulation.
+// All the software tests have the same CSR check: if the expected result matches
+// the generated result, 1 is written to the CSR which indicates a passing status.
+
+module c_tests_tb();
   reg clk, rst;
   parameter CPU_CLOCK_PERIOD = 20;
   parameter CPU_CLOCK_FREQ   = 1_000_000_000 / CPU_CLOCK_PERIOD;
 
-  localparam TIMEOUT_CYCLE = 1000;
+  localparam TIMEOUT_CYCLE = 100_000;
 
   initial clk = 0;
   always #(CPU_CLOCK_PERIOD/2) clk = ~clk;
@@ -17,8 +22,8 @@ module isa_tb();
   ) CPU (
     .clk(clk),
     .rst(rst),
-    .serial_in(1'b1),
-    .serial_out()
+    .serial_in(1'b1), // input
+    .serial_out()     // output
   );
 
   reg [31:0] cycle;
@@ -29,8 +34,8 @@ module isa_tb();
       cycle <= cycle + 1;
   end
 
-  string hex_file;
-  string test_name;
+  reg [255:0] MIF_FILE;
+  string hex_file, test_name;
   initial begin
     if (!$value$plusargs("hex_file=%s", hex_file)) begin
       $display("Must supply hex_file!");
@@ -45,27 +50,36 @@ module isa_tb();
     $readmemh(hex_file, `IMEM_PATH.mem, 0, 16384-1);
     $readmemh(hex_file, `DMEM_PATH.mem, 0, 16384-1);
 
-    $dumpfile({test_name, ".fst"});
-    $dumpvars(0, isa_tb);
+    `ifndef IVERILOG
+      $vcdpluson;
+    `endif
+    `ifdef IVERILOG
+      $dumpfile({test_name, ".fst"});
+      $dumpvars(0, c_tests_tb);
+    `endif
 
-    rst = 0;
-
-    // Reset the CPU
     rst = 1;
-    repeat (30) @(posedge clk); // Hold reset for 30 cycles
+
+    // Hold reset for a while
+    repeat (10) @(posedge clk);
 
     @(negedge clk);
     rst = 0;
 
-    // Wait until csr[0] is asserted
-    while (`CSR_PATH[0] !== 1'b1)
+    // Delay for some time
+    repeat (10) @(posedge clk);
+
+    // Wait until csr is updated
+    while (`CSR_PATH === 0)
       @(posedge clk);
 
-    if (`CSR_PATH[0] === 1'b1 && `CSR_PATH[31:1] === 31'b0) begin
-      $display("[passed] - %s in %d simulation cycles", test_name, cycle);
+    if (`CSR_PATH === 32'b1) begin
+      $display("[%d sim. cycles] CSR test PASSED!", cycle);
     end else begin
-      $display("[failed] - %s. Failed test: %d", test_name, `CSR_PATH[31:1]);
+      $display("[%d sim. cycles] CSR test FAILED!", cycle);
     end
+
+    repeat (100) @(posedge clk);
     $finish();
   end
 

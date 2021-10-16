@@ -17,6 +17,9 @@ VVP                     := vvp
 ISA_TESTS               := $(subst /cygdrive/c/,C:/,$(shell find $(ABS_TOP)/../software/riscv-isa-tests -type f -name "*.hex"))
 ISA_TESTS_FILES         := $(notdir $(ISA_TESTS))
 ISA_TESTS_FST           := $(addprefix sim/isa/,$(subst .hex,.fst,$(ISA_TESTS_FILES)))
+C_TESTS                 := $(subst /cygdrive/c/,C:/,$(shell find $(ABS_TOP)/../software/c_tests -type f -name "*.c"))
+C_TESTS_FILES           := $(notdir $(C_TESTS))
+C_TESTS_FST             := $(addprefix sim/c_tests/,$(subst .c,.fst,$(C_TESTS_FILES)))
 
 sim/%.tb: sim/%.v $(RTL) $(SIM_MODELS)
 	cd sim && $(VCS) $(VCS_OPTS) -o $*.tb $(RTL) $(SIM_MODELS) $*.v -top $* -top glbl
@@ -39,6 +42,16 @@ sim/isa/%.fst: sim/isa/isa_tb.tbi $(ABS_TOP)/../software/riscv-isa-tests/%.hex
 	cd sim/isa && $(VVP) isa_tb.tbi -fst +hex_file=$(word 2,$^) +test_name=$(basename $(notdir $(word 2,$^))) |& tee $(basename $(notdir $(word 2,$^))).log
 
 isa-tests: $(ISA_TESTS_FST)
+
+# C Tests
+sim/c_tests/c_tests_tb.tbi: sim/c_tests_tb.v $(RTL) $(SIM_MODELS)
+	mkdir -p sim/c_tests
+	cd sim/c_tests && $(IVERILOG) $(IVERILOG_OPTS) -o c_tests_tb.tbi ../c_tests_tb.v $(RTL) $(SIM_MODELS)
+
+sim/c_tests/%.fst: sim/c_tests/c_tests_tb.tbi $(ABS_TOP)/../software/c_tests/%
+	cd sim/c_tests && $(VVP) c_tests_tb.tbi -fst +hex_file=$(word 2,$^)/$*.hex +test_name=$(basename $(notdir $(word 2,$^))) |& tee $(basename $(notdir $(word 2,$^))).log
+
+c-tests: $(C_TESTS_FST)
 
 build/target.tcl: $(RTL) $(CONSTRAINTS)
 	mkdir -p build
@@ -100,7 +113,7 @@ clean-sim:
 	sim/*.tb sim/*.daidir sim/csrc \
 	sim/ucli.key sim/*.vpd sim/*.vcd \
 	sim/*.tbi sim/*.fst sim/*.jou sim/*.log sim/*.out \
-	sim/isa
+	sim/isa sim/c_tests
 
 clean-build:
 	rm -rf ./build
