@@ -2,8 +2,7 @@
 #include "uart.h"
 #include "string.h"
 
-int8_t* read_n(int8_t*b, uint32_t n)
-{
+int8_t* read_n(int8_t*b, uint32_t n) {
     for (uint32_t i = 0; i < n;  i++) {
         b[i] =  uread_int8();
     }
@@ -11,8 +10,7 @@ int8_t* read_n(int8_t*b, uint32_t n)
     return b;
 }
 
-int8_t* read_token(int8_t* b, uint32_t n, int8_t* ds)
-{
+int8_t* read_token(int8_t* b, uint32_t n, int8_t* ds) {
     for (uint32_t i = 0; i < n; i++) {
         int8_t ch = uread_int8();
         for (uint32_t j = 0; ds[j] != '\0'; j++) {

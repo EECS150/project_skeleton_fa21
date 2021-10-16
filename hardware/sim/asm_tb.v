@@ -42,6 +42,8 @@ module asm_tb();
   endtask
 
   initial begin
+    $readmemh("../../software/asm/asm.hex", `BIOS_PATH.mem, 0, 4095);
+
     `ifndef IVERILOG
         $vcdpluson;
     `endif
