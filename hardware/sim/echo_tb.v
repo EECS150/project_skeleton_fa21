@@ -1,4 +1,5 @@
 `timescale 1ns/1ns
+`include "mem_path.vh"
 
 module echo_tb();
   reg clk, rst;
@@ -96,6 +97,9 @@ module echo_tb();
   endtask
 
   initial begin
+    $readmemh("../../software/echo/echo.hex", `IMEM_PATH.mem, 0, 16384-1);
+    $readmemh("../../software/echo/echo.hex", `DMEM_PATH.mem, 0, 16384-1);
+
     `ifndef IVERILOG
         $vcdpluson;
     `endif
@@ -144,7 +148,7 @@ module echo_tb();
   initial begin
     repeat (TIMEOUT_CYCLE) @(posedge clk);
     $display("Timeout!");
-    $finish();
+    $fatal();
   end
 
 endmodule

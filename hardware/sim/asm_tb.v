@@ -76,6 +76,6 @@ module asm_tb();
   initial begin
     repeat (100) @(posedge clk);
     $display("Failed: timing out");
-    $finish();
+    $fatal();
   end
 endmodule

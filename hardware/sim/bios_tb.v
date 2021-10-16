@@ -386,7 +386,7 @@ module bios_tb();
   initial begin
     repeat (TIMEOUT_CYCLE) @(posedge clk);
     $display("Timeout!");
-    $finish();
+    $fatal();
   end
 
 endmodule
