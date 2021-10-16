@@ -1,14 +1,14 @@
-# Checkpoint 0/1: 3-Stage Pipelined RISC-V CPU
-The first checkpoint in this project is designed to guide the development of a three-stage pipelined RISC-V CPU that will be used as a base system in subsequent checkpoints.
+# Checkpoint 1/2: 3-Stage Pipelined RISC-V CPU
+The first and second checkpoints in this project is designed to guide the development of a three-stage pipelined RISC-V CPU that will be used as a base system in subsequent checkpoints.
 
 ## Project Overview
 <p align=center>
   <img height=700 src="./figs/fa21_overview.svg"/>
 </p>
 
-- The green (RISC-V core) block on the diagram is the focus of Checkpoints 0 and 1.
-- Checkpoint 2 will add audio and IO components in blue.
-- Finally, Checkpoint 3 will implement the BPM (beats per minute) detector unit in red.
+- The green (RISC-V core) block on the diagram is the focus of Checkpoints 1 and 2.
+- Checkpoint 3 will add audio and IO components in blue.
+- Finally, Checkpoint 4 will implement the BPM (beats per minute) detector unit in red.
 
 ## Setting up Your Repository
 The project skeleton files are available on Github.
@@ -24,12 +24,12 @@ git push origin master
 To pull project updates from the skeleton repo, run `git pull skeleton master`.
 To push updates to your team repo, run `git add`, `git commit`, and `git push origin master`.
 
-**TODO TODO TODO UPDATE THIS LINK WITH A NEW GOOGLE FORM**
-To get a team repo, fill the \href{https://docs.google.com/forms/d/1hOJek4q_Z6SokflpH17gOESGGCXmY1VfdJ5VLMNku1U}{Google form} with your team information (names, Github logins). Only one person in a team is required to fill the form.
-
 **You should check frequently for updates to the skeleton files.**
 Whenever you resume your work on the project, it is highly suggested that you do `git pull` from the skeleton repo to get the latest update.
 Update announcements will be posted to Piazza.
+
+### Getting a Team Repo
+To get a team repo, add your team members' info to [this Google spreadsheet](https://docs.google.com/spreadsheets/d/1WKeMn8X4Kfe9oiq2fJlTf6Gyqsy0dxPu9tbZad-N5vA/edit?usp=sharing).
 
 ## Integrate Designs from Labs
 You should copy some modules you designed from the labs into `hardware/src/io_circuits`.
@@ -47,23 +47,23 @@ uart_transmitter.v
 - `hardware`
   - `src`
     - `z1top.v`: Top level module. The RISC-V CPU is instantiated here.
-    - `riscv_core/Riscv151.v`: All of your CPU datapath and control should be contained in this file.
+    - `riscv_core/cpu.v`: All of your CPU datapath and control should be contained in this file.
     - `io_circuits`: Your IO circuits from the labs.
   - `sim`
-    - `Riscv151_testbench.v`: Starting point for testing your CPU. The testbench checks if your CPU can execute all the RV32I instructions (including CSR ones) correctly, and can handle some simple hazards. You should make sure that your CPU implementation passes this testbench before moving on.
-    - `assembly_testbench.v`: The testbench works with the software in `software/assembly_tests`.
-    - `isa_testbench.v`: The testbench works with the RISC-V ISA test suite in `software/riscv-isa-tests`. The testbench only runs one test at a time. To run multiple tests, use the script we provide (see [RISC-V ISA Tests](#riscv-isa-tests). There are a total of 38 ISA tests in the test suite.
-    - `echo_testbench.v`: The testbench works with the software in `software/echo`. The CPU reads a character sent from the serial rx line and echoes it back to the serial tx line.
-    - `bios_testbench.v`: The testbench works with the BIOS program. The testbench checks if your CPU can execute the instructions stored in the BIOS memory. The testbench also emulates user input sent over the serial rx line, and checks the BIOS message output obtained from the serial tx line.
-    - `software_testbench.v`: The testbench works with some software programs in `software/`. This is an extra test for debugging.
-    - `c_testbench.v`: The testbench works with the software in `software/c_test`. This is an extra test for debugging.
+    - `cpu_tb.v`: Starting point for testing your CPU. The testbench checks if your CPU can execute all the RV32I instructions (including CSR ones) correctly, and can handle some simple hazards. You should make sure that your CPU implementation passes this testbench before moving on.
+    - `asm_tb.v`: This testbench works with the software in `software/assembly_tests`.
+    - `isa_tb.v`: This testbench works with the RISC-V ISA test suite in `software/riscv-isa-tests`. The testbench only runs one test at a time. To run multiple tests, use the Makefile target we provide (see [RISC-V ISA Tests](#riscv-isa-tests). There are a total of 38 ISA tests in the test suite.
+    - `c_tests_tb.v`: This testbench verifies the correct execution of the software in `software/c_tests`. There are 6 C tests provided.
+    - `echo_tb.v`: This testbench works with the software in `software/echo`. The CPU reads a character sent from the serial rx line and echoes it back to the serial tx line.
+    - `uart_parse_tb.v`: This testbench verifies a few tricky functions from the BIOS in isolation using the software in `software/uart_parse`.
+    - `bios_tb.v`: This testbench simulates the execution of the BIOS program. It checks if your CPU can execute the instructions stored in the BIOS memory. The testbench also emulates user input sent over the serial rx line, and checks the BIOS message output obtained from the serial tx line.
 - `software`
   - `bios`: The BIOS program, which allows us to interact with our CPU via the UART. You need to compile it before creating a bitstream or running a simulation.
   - `echo`: The echo program, which emulates the echo test of Lab 5 in software.
-  - `assembly_tests`: Use this as a template to write assembly tests for your processor designed to run in simulation.
-  - `c_example`: Use this as an example to write C programs.
-  - `riscv-isa-tests`: A comprehensive test suite for your CPU. Available after doing `git submodule` (see [RISC-V ISA Tests](#riscv-isa-tests)).
-  - `mmult`: This is a program to be run on the FPGA for Checkpoint 1. It generates 2 matrices and multiplies them. Then it returns a checksum to verify the correct result.
+  - `asm`: Use this as a template to write assembly tests for your processor designed to run in simulation.
+  - `c_tests`: Use these as examples to write C programs for testing.
+  - `riscv-isa-tests`: A comprehensive test suite for your CPU. Available after running `git submodule` (see [RISC-V ISA Tests](#riscv-isa-tests)).
+  - `mmult`: This program is to be run on the FPGA for Checkpoint 1. It generates 2 matrices and multiplies them. Then it returns a checksum to verify the correct result.
 
 To compile `software` go into a program directory and run `make`.
 To build a bitstream run `make impl` in `hardware`.
@@ -77,7 +77,8 @@ For the specific details of each instruction, refer to sections 2.2 through 2.6 
 You will have to implement 2 CSR instructions to support running the standard RISC-V ISA test suite.
 A CSR (or control status register) is some state that is stored independent of the register file and the memory.
 While there are `2^12` possible CSR addresses, you will only use one of them `tohost = 0x51E`).
-The `tohost` register is monitored by the RISC-V ISA testbench (`isa_testbench.v`), and simulation ends when a non-zero value is written to this register.
+
+The `tohost` CSR is monitored by the RISC-V ISA testbench (`isa_tb.v`), and simulation ends when a non-zero value is written to this register.
 A CSR value of 1 indicates success, and a value greater than 1 indicates which test failed.
 
 There are 2 CSR related instructions that you will need to implement:
@@ -108,17 +109,19 @@ You'll have to deal with the following types of hazards:
 - **Read-after-write data hazards** Consider carefully how to handle instructions that depend on a preceding load instruction, as well as those that depend on a previous arithmetic instruction.
 - **Control hazards** What do you do when you encounter a branch instruction, a jal (jump and link), or jalr (jump from register and link)? You will have to choose whether to predict branches as taken or not taken by default and kill instructions that weren't supposed to execute if needed. You can begin by resolving branches by stalling the pipeline, and when your processor is functional, move to naive branch prediction.
 
-
 ## Register File
-We have provided a register file module for you in `EECS151.v: ASYNC_RAM_1W2R`. The register file has two asynchronous-read ports and one synchronous-write port (positive edge). In addition, you should ensure that register 0 is not writable in your own logic, i.e. reading from register 0 always returns 0.
+We have provided a register file skeleton for you in `riscv_core/reg_file.v`.
+The register file has two asynchronous-read ports and one synchronous-write port (positive edge).
+In addition, you should ensure that register 0 is not writable in your own logic, i.e. reading from register 0 always returns 0.
 
 ## RAMs
-In this project, we will be using some memory blocks defined in `EECS151.v` to implement memories for the processor. As you may recall in previous lab exercises, the memory blocks can be either synthesized to Block RAMs or LUTRAMs on FPGA.
-For the project, our memory blocks will be mapped to Block RAMs. Therefore, read and write to memory are **synchronous**.
+The RAMs used for the project are provided for you in `hardware/src/memories`.
+The behavioral Verilog for these memories is written so that Vivado will infer Block RAMs to implement them.
+Read and write to memory are **synchronous**.
 
 ### Initialization
-For synthesis, the BIOS memory is initialized with the contents of the BIOS program, and the other memories are zeroed out.
-For simulation, the provided testbenches initialize the BIOS memory with a program specified by the testbench (see `sim/assembly_testbench.v`).
+For synthesis, the BIOS memory is initialized with the contents of the BIOS program (see `bios_mem.v`), and the other memories are zeroed out.
+For simulation, the provided testbenches initialize the BIOS memory with a program specified by the testbench (see the `$readmemh` call in `sim/asm_tb.v`).
 
 ### Endianness + Addressing
 The instruction and data RAMs have 16384 32-bit rows, as such, they accept 14 bit addresses.
@@ -148,7 +151,7 @@ Therefore, you will have to shift and mask the output of the RAM to select the a
 For example, if you want to execute a `lbu` on a byte address ending in `2'b10`, you will only want bits `[23:16]` of the 32 bits that you read out of the RAM (thus storing `{24'b0, output[23:16]}` to a register).
 
 ### Writing to RAMs
-To take care of `sb` and `sh`, note that the `we` input to the instruction and data memories is 4 bits wide.
+To take care of `sb` and `sh`, note that the `we` (write enable) input to the instruction and data memories is 4 bits wide.
 These 4 bits are a byte mask telling the RAM which of the 4 bytes to actually write to.
 If `we ={4'b1111}`, then all 32 bits passed into the RAM would be written to the address given.
 
@@ -163,20 +166,20 @@ Here's an example of storing a single byte:
 The standard RISC pipeline is usually depicted with separate instruction and data memories.
 Although this is an intuitive representation, it does not let us modify the instruction memory to run new programs.
 Your CPU, by the end of this checkpoint, will be able to receive compiled RISC-V binaries though the UART, store them into instruction memory, then jump to the downloaded program.
-To facilitate this, we will adopt a modified memory architecture shown in Figure \ref{fig:mem_arch}.
+To facilitate this, we will adopt a modified memory architecture shown in the figure below.
 
 <p align=center>
   <img height=300 src="./figs/memory_arch.svg"/>
 </p>
 <p align=center>
-  <em>Figure 2: The Riscv151 memory architecture. There is only 1 IMEM and DMEM instance in Riscv151 but their ports are shown separately in this figure for clarity. The left half of the figure shows the instruction fetch logic and the right half shows the memory load/store logic.</em>
+  <em>Figure 2: The RISC-V core memory architecture. There is only 1 IMEM and DMEM instance in the CPU but their ports are shown separately in this figure for clarity. The left half of the figure shows the instruction fetch logic and the right half shows the memory load/store logic.</em>
 </p>
 
 ### Summary of Memory Access Patterns
 The memory architecture will consist of three RAMs (instruction, data, and BIOS).
 The RAMs are memory resources (block RAMs) contained within the FPGA chip, and no external (off-chip, DRAM) memory will be used for this project.
 
-The processor will begin execution from the BIOS memory, which will be initialized with the BIOS program (in `software/bios151v3`).
+The processor will begin execution from the BIOS memory, which will be initialized with the BIOS program (in `software/bios`).
 The BIOS program should be able to read from the BIOS memory (to fetch static data and instructions), and read and write the instruction and data memories.
 This allows the BIOS program to receive user programs over the UART from the host PC and load them into instruction memory.
 
@@ -191,7 +194,7 @@ Assume that the compiler will never generate unaligned accesses.
 ### Address Space Partitioning
 Your CPU will need to be able to access multiple sources for data as well as control the destination of store instructions.
 In order to do this, we will partition the 32-bit address space into four regions: data memory read and writes, instruction memory writes, BIOS memory reads, and memory-mapped I/O.
-This will be encoded in the top nibble (4 bits) of the memory address generated in load and store operations, as shown in Table \ref{mem_space1}.
+This will be encoded in the top nibble (4 bits) of the memory address generated in load and store operations, as shown in the table below.
 In other words, the target memory/device of a load or store instruction is dependent on the address.
 The reset signal should reset the PC to the value defined by the parameter `RESET_PC` which is by default the base of BIOS memory (`0x40000000`).
 
@@ -204,11 +207,11 @@ The reset signal should reset the PC to the value defined by the parameter `RESE
 | 4'b0100        | Data         | BIOS Memory        | Read-only  |                        |
 | 4'b1000        | Data         | I/O                | Read/Write |                        |
 
-Each partition specified in Table \ref{mem_space1} should be enabled based on its associated bit in the address encoding.
+Each partition specified in this table should be enabled based on its associated bit in the address encoding.
 This allows operations to be applied to multiple devices simultaneously, which will be used to maintain memory consistency between the data and instruction memory.
 
 For example, a store to an address beginning with `0x3` will write to both the instruction memory and data memory, while storing to addresses beginning with `0x2` or `0x1` will write to only the instruction or data memory, respectively.
-For details about the BIOS and how to run programs on your CPU, see Section~\ref{bios_info}.
+For details about the BIOS and how to run programs on your CPU, see [BIOS and Programming Your CPU](#bios-and-programming-your-cpu).
 
 Please note that a given address could refer to a different memory depending on which address type it is.
 For example the address `0x10000000` refers to the data memory when it is a data address while a program counter value of `0x10000000` refers to the instruction memory.
@@ -224,7 +227,7 @@ This enables load and store instructions to access the I/O devices as if they we
 
 To determine CPI (cycles per instruction) for a given program, the I/O memory map is also used to include instruction and cycle counters.
 
-Table~\ref{mem_map1} shows the memory map for this stage of the project.
+The table below shows the memory map for this stage of the project.
 
 | Address      | Function              | Access | Data Encoding                                          |
 |--------------|-----------------------|--------|--------------------------------------------------------|
@@ -259,7 +262,7 @@ A reasonable order in which to complete your testing is as follows:
 - Test the CPU's memory mapped I/O --- see `echo_testbench.v`
 - Test the CPU's memory mapped I/O with BIOS software program --- see `bios_testbench.v`
 
-## Riscv151 Tests
+### Riscv151 Tests
 
 Once you are confident that the individual components of your processor are working in isolation, you will want to test the entire processor as a whole. One way to do this is to pass the `Riscv151_testbench`. To run the test, use either one of the following commands (iverilog is highly recommended since it is faster):
 
