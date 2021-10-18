@@ -31,7 +31,7 @@ Here is a description of each checkpoint and how many weeks will be alloted to e
 - Commit your design documents (block diagram + writeup) to `docs`.
 
 ### Checkpoint 1.5 (Decoder + ALU Implementation and Testbench)
-- **Due:** October 5, Friday (2 weeks)
+- **Due:** November 5, Friday (2 weeks)
 
 ### Checkpoint 2 (Pipelined RISC-V CPU)
 - **Due:** November 12, Friday (1 week)
