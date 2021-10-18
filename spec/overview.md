@@ -24,18 +24,19 @@ Here is a description of each checkpoint and how many weeks will be alloted to e
 *Note*: this schedule is tentative and is subject to change.
 
 ### Checkpoint 1 (CPU Pipeline Diagram)
-- **Due:** October 22, Friday (1 week)
-- Draw a schematic of your processor's datapath and pipeline stages, and provide a brief writeup of your answers to the questions in ~\ref{sec:chkpt1_questions}.
+- **Due:** October 29, Friday (1 week)
+- Read through the [checkpoint 1/2 spec](./checkpoint1.md)
+- Draw a schematic of your processor's datapath and pipeline stages, and provide a brief writeup of your answers to [the Checkpoint 1 questions](./checkpoint1.md#checkpoint-1-questions).
 - Push all of your IO-circuit Verilog modules that you have implemented in the labs to your assigned project Github repository in `hardware/src/io_circuits` (see [Integrate Designs From Labs](./checkpoint1.md#integrate-designs-from-labs)).
 - Commit your design documents (block diagram + writeup) to `docs`.
 
 ### Checkpoint 1.5 (Decoder + ALU Implementation and Testbench)
-- **Due:** October 29, Friday (1 week)
+- **Due:** October 5, Friday (2 weeks)
 
 ### Checkpoint 2 (Pipelined RISC-V CPU)
-- **Due:** November 12, Friday (2 weeks)
+- **Due:** November 12, Friday (1 week)
 - Implement a fully functional RISC-V processor core in Verilog. Your processor core should be able to run the \textbf{mmult} demo successfully.
-- See the [checkpoint 1 spec](./checkpoint1.md)
+- See the [checkpoint 1/2 spec](./checkpoint1.md)
 
 ### Checkpoint 3 (IO / Audio Circuit Integration)
 - **Due:** November 19, Friday (1 week)

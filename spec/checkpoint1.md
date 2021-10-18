@@ -219,7 +219,7 @@ For example the address `0x10000000` refers to the data memory when it is a data
 The note in the table above (referencing PC[30]), specifies that you can only write to instruction memory if you are currently executing in BIOS memory.
 This prevents programs from being self-modifying, which would drastically complicate your processor.
 
-### Memory Mapped I/O
+### Memory Mapped IO
 At this stage in the project the only way to interact with your CPU is through the UART.
 The UART from Lab 5 accomplishes the low-level task of sending and receiving bits from the serial lines, but you will need a way for your CPU to send and receive bytes to and from the UART.
 To accomplish this, we will use memory-mapped I/O, a technique in which registers of I/O devices are assigned memory addresses.
@@ -254,64 +254,43 @@ The design specified for this project is a complex system and debugging can be v
 In assigning partial credit at the end for incomplete projects, we will look at testing as an indicator of progress.
 A reasonable order in which to complete your testing is as follows:
 
-- Test that your modules work in isolation via Verilog testbenches
-- Test that your Riscv151 work with the `Riscv151_testbench.v`
-- Test the entire CPU one instruction at a time with hand-written assembly --- see `assembly_testbench.v`
-- Run the `riscv-tests` ISA test suite
-- Some extra tests with other software C program, such as `c_test` and `strcmp`. They could help reveal more bugs -- see `c_testbench.v` and `software_testbench.v`
-- Test the CPU's memory mapped I/O --- see `echo_testbench.v`
-- Test the CPU's memory mapped I/O with BIOS software program --- see `bios_testbench.v`
+1. Test that your modules work in isolation via Verilog testbenches that you write yourself
+1. Test that your CPU pipeline works with `sim/cpu_tb.v`
+1. Test the entire CPU one instruction at a time with hand-written assembly using `sim/asm_tb.v`
+1. Run the `riscv-tests` ISA test suite (`make isa-tests`)
+1. Some extra tests with other software C program, such as the `c_tests` and `uart_parse`. They could help reveal more bugs -- see `c_tests_tb.v` and `uart_parse_tb.v`
+1. Test the CPU's memory mapped I/O --- see `echo_tb.v`
+1. Test the CPU's memory mapped I/O with BIOS software program --- see `bios_tb.v`
 
-### Riscv151 Tests
+### Unit Tests
+You should write unit tests for the isolated components of your CPU such as the register file, decoder, and ALU in `hardware/sim`.
+The tests should contain assertions and check correct behavior under several common and extreme conditions.
 
-Once you are confident that the individual components of your processor are working in isolation, you will want to test the entire processor as a whole. One way to do this is to pass the `Riscv151_testbench`. To run the test, use either one of the following commands (iverilog is highly recommended since it is faster):
+Run them just like you did in the labs. `make sim/tb.fst` (iverilog) or `make sim/tb.vpd` (VCS).
+View the waveforms with `gtkwave sim/tb.fst &` or `dve -vpd sim/tb.vpd &`.
 
-```shell
-# Simulate with sim/Riscv151_testbench.v
+### CPU Test
+Once you are confident that the individual components of your processor are working in isolation, you will want to test the entire processor as a whole.
+The provided `sim/cpu_tb.v` tests all the RV32I instructions.
+Run it as usual.
 
-# With iverilog
-make iverilog-sim tb=Riscv151_testbench
+To pass this testbench, you should have a working CPU implementation that can decode and execute all the instructions in the spec, including the CSR instructions.
+Several basic hazard cases are also tested.
 
-# Open waveform
-make wave tb=Riscv151_testbench
+The testbench does not work with any software code as in the following sections, but rather it manually initializes the instructions and data in the memory blocks as well as the register file content for each test.
+The testbench does not cover reading from BIOS memory nor memory mapped IO. You will need to complete these components before moving on with other testbenches.
 
-# With Vivado
-make sim tb=Riscv151_testbench
-```
+### Assembly Tests
+Once the `cpu_tb` passes, you should write more assembly tests by hand to aggresively test hazards, branches, and jumps.
+You should write your assembly tests in `software/asm/start.s` with the corresponding testbench in `hardware/sim/asm_tb.v`.
 
-The testbench covers all RV32I instructions. To pass this testbench, you should have a working Riscv151 implementation that can decode and execute all the instructions in the spec, including the CSR instructions. Several basic hazard cases are also tested. The testbench does not work with any software code as in the following sections, but rather it manually initializes the instructions and data in the memory blocks as well as the register file content for each test. The testbench does not cover reading from BIOS memory nor memory mapped IO. You will need to complete these components before moving on with other testbenches.
-
-## Software Toolchain
-A GCC RISC-V toolchain has been built and installed in the eecs151 home directory; these binaries will run on any of the c125m machines in the 125 Cory lab. The \href{https://berkeley.box.com/s/s4z0ykpf0tudrm9hce8fsmitpgb2khhe}{VM Image} also has the toolchain installed along with Vivado 2019.1.
-
-The most relevant programs in the toolchain are:
-
-- `riscv64-unknown-elf-gcc`: GCC for RISC-V, compiles C code to RISC-V binaries.
-- `riscv64-unknown-elf-as`: RISC-V assembler, compiles assembly code to RISC-V binaries.
-- `riscv64-unknown-elf-objdump`: Dumps RISC-V binaries as readable assembly code.
-
-Look at the `software/c_example` folder for an example of a C program.
-
-There are several files:
-
-- `start.s`: This is an assembly file that contains the start of the program.
-      It initialises the stack pointer then jumps to the `main` label.
-      Edit this file to move the top of the stack.
-      Typically your stack pointer is set to the top of the data memory address space, so that the stack has enough room to grow downwards.
-- `c_example.ld`: This linker script sets the base address of the program.
-      For Checkpoint 1, this address should be in the format `0x1000xxxx`
-      The .text segment offset is typically set to the base of the instruction memory address space.
-- `c_example.elf`: Binary produced after running `make`.\\Use `riscv64-unknown-elf-objdump -Mnumeric -D c_example.elf` to view the assembly code.
-- `c_example.dump`: Assembly dump of the binary.
-
-## Assembly Tests
-Hand written assembly tests are in `software/assembly_tests/start.s` and the corresponding testbench is in `hardware/sim/assembly_testbench.v`.
-To run the test, run:
-`make sim tb=assembly_testbench`
+Initially, and if you change `start.s` you need to **run `make`** in `software/asm` before running `make sim/asm_tb.vpd`.
+To force simulation to run even if your RTL hasn't changed, you can use the -B flag, like `make -B sim/asm_tb.vpd`.
+This applies to **all** software testbenches.
 
 `start.s` contains assembly that's compiled and loaded into the BIOS RAM by the testbench.
 
-```
+```asm
 _start:
 
 # Test ADD
@@ -324,137 +303,150 @@ li x20, 1           # Set the flag register to stop execution and inspect the re
 Done: j Done
 ```
 
-The `assembly_testbench` toggles the clock one cycle at time and waits for register `x20` to be written with a particular value (in the above example: 1).
+The `asm_tb` toggles the clock one cycle at time and waits for register `x20` to be written with a particular value (in the above example: 1).
 Once `x20` contains 1, the testbench inspects the value in `x1` and checks it is 300, which indicates your processor correctly executed the add instruction.
 
 If the testbench times out it means `x20` never became 1, so the processor got stuck somewhere or `x20` was written with another value.
 
-You should add your own tests to verify that your processor can execute different instructions correctly. Modify the file `start.s` to add your assembly code, then rerun the RTL simulation.
+You should add your own tests to verify that your processor can execute different instructions correctly.
+Modify the file `start.s` to add your assembly code, modify `asm_tb.v` to add your checks, and then rerun the RTL simulation.
 
-## RISC-V ISA Tests
+### RISC-V ISA Tests
 You will need the CSR instructions to work before you can use this test suite, and you should have confidence in your hand-written assembly tests.
-Test the CSR instructions using hand assembly tests.
 
 To run the ISA tests, first pull the latest skeleton changes:
 ``` shell
-git pull staff main
+git pull staff master
 git submodule update --init --recursive
 ```
 
-Then run
+The rv32i tests will be cloned into `software/riscv-isa-tests/riscv-tests/isa/rv32ui/`.
 
-``` shell
-cd hardware
-
-# with iverilog
-make iverilog-sim tb=isa_testbench test=all
-
-# with Vivado
-make sim tb=isa_testbench test=all
+To compile the tests run:
+```shell
+cd software/riscv-isa-tests && make
 ```
 
-To run a particular ISA test (e.g. `add`), replace "all" with "add". The simulation should print out which tests passed or failed and their simulation cycles.
+To run the tests run:
+```shell
+cd hardware/sim
+make isa-tests  # to run all ISA tests
+make sim/isa/lw.fst  # to run a specific test
+```
 
-If you're failing a test, debug using the test assembly file in\\`software/riscv-isa-tests/riscv-tests/isa/rv32ui` or the generated assembly dump.
-The assembly dump files are extremely helpful in debugging at this stage. If you look into a particular dump file of a test (e.g., `add.dump`), it contains several subtests in series. The CSR output from the simulation indicates which subtest is failing to help you narrow down where the problem is, and you can start debugging from there.
+The simulation should print out which tests passed or failed and their simulation cycles.
+If you're failing a test, debug using the test assembly file in `software/riscv-isa-tests/riscv-tests/isa/rv32ui` or the generated assembly dump.
 
-The `RESET_PC` parameter is used in `isa_testbench` to start the test in the IMEM instead of the BIOS.
-Make sure you have used it in `Riscv151.v`.
+The assembly dump files are extremely helpful in debugging at this stage.
+If you look into a particular dump file of a test (e.g., `add.dump`), it contains several subtests in series.
+The CSR output from the simulation indicates which subtest is failing to help you narrow down where the problem is, and you can start debugging from there.
 
-## Software Tests
+The `RESET_PC` parameter is used in `isa_tb` to start the test in the IMEM instead of the BIOS.
+Make sure you have used it in `riscv_core/cpu.v`.
 
 ### RISC-V Programs
 
-Next, you will test your processor with some small RISC-V C programs in `software`.
-We use the RISC-V software toolchain to compile a program to a memory initialization file
-(MIF). The MIF file stores the assembly instructions (encoded in binary format)
-of the program and initializes \texttt{IMem} and \texttt{DMem} in
-`hardware/sim/software_testbench.v` for testing.
-Some available C programs are:
+#### Compiler Toolchain
+Here's some background about the the toolchain that's used to compile RISC-V binaries.
+The GCC RISC-V cross-compiler toolchain is avaialble on any of the c111 machines.
 
-`software/strcmp/strcmp.c`,
-`software/vecadd/vecadd.c`,
-`software/fib/fib.c`,
-`software/sum/sum.c`,
-`software/replace/replace.c`,
-`software/cachetest/cachetest.c`
+The most relevant programs in the toolchain are:
+- `riscv64-unknown-elf-gcc`: GCC for RISC-V, compiles C code to RISC-V binaries.
+- `riscv64-unknown-elf-as`: RISC-V assembler, compiles assembly code to RISC-V binaries.
+- `riscv64-unknown-elf-objdump`: Dumps RISC-V binaries as readable assembly code.
 
-which you can test with the following commands
+Look at the `software/echo` folder for an example of a C program.
 
+There are several files:
+
+- `start.s`: This is an assembly file that contains the start of the program.
+      It initialises the stack pointer (`sp`) then jumps to the `main` label.
+      Edit this file to move the top of the stack.
+      Typically your stack pointer is set to the top of the data memory address space, so that the stack has enough room to grow downwards.
+- `echo.ld`: This linker script sets the base address of the program.
+      For Checkpoint 1, this address should be in the format `0x1000xxxx` (indicating the base of IMEM/DMEM).
+      The .text segment offset is typically set to the base of the instruction memory address space.
+- `echo.elf`: Binary produced after running `make`.
+- `echo.dump`: Assembly dump of the binary.
+
+#### C Tests
+Next, you will test your processor with some small RISC-V C programs.
+We use the RISC-V software toolchain to compile a program to a hex file that is used to initialize the `imem` and `dmem`.
+
+The C tests are in `software/c_tests`.
+You should go into each folder, understand what the program is trying to do, and **run `make`** to generate a `.hex` file.
+The available tests include: `strcmp`, `vecadd`, `fib`, `sum`, `replace`, `cachetest`.
+
+To run the tests:
 ```shell
-# with iverilog
-make iverilog-sim tb=software_testbench sw=strcmp
-make iverilog-sim tb=software_testbench sw=vecadd
-...
-
-# with Vivado
-make sim tb=software_testbench sw=strcmp
-make sim tb=software_testbench sw=vecadd
-...
+cd hardware
+make c-tests  # run all C tests
+make sim/c_tests/fib.fst  # run the fib C test
 ```
 
-These tests could help reveal more hazard bugs in your implementation. \texttt{strcmp} is particular important since it is frequently used in the BIOS program. The tests use CSR instruction to indicate if they are passed (e.g., write '1' to the CSR register if passed). Take a look at the C files for further details. Following that practice, you can also write your custom C program to further test your CPU.
+These tests could help reveal more hazard bugs in your implementation.
+`strcmp` is particularly important since it is frequently used in the BIOS program.
 
-As an additional tip for debugging, try changing the compiler optimization flag in the `Makefile` of each software test (e.g., `-O2` to `-O1` or `-O0`), or using a newer GCC compiler and see if your processor still passes the test. Different compiler settings generate different sequences of assembly instructions, and some might expose subtle hazard bugs yet to be covered by your implementation.
+The tests use CSR instruction to indicate if they are passed (e.g., write '1' to the CSR register if passed).
+Following that practice, you can also **write your custom C programs** to further test your CPU.
 
-### Echo
-You should have your UART modules integrated with the CPU before running this test. The test verifies if your CPU is able to: check the UART status, read a character from UART Receiver, and write a character to UART Transmitter. Take a look at the software code `software/echo/echo.c` to see what it does. The testbench loads the MIF file compiled from the software code, and load it to the BIOS memory in a similar manner to the assembly test and riscv-isa tests.
+As an additional tip for debugging, try changing the compiler optimization flag in the `Makefile` of each software test (e.g., `-O2` to `-O1` or `-O0`) and see if your processor still passes the test.
+Different compiler settings generate different sequences of assembly instructions, and some might expose subtle hazard bugs yet to be covered by your implementation.
 
-To run the echo test, run
+### Echo Program Test
+You should have your UART modules integrated with the CPU before running this test.
+The test verifies if your CPU is able to: check the UART status, read a character from UART Receiver, and write a character to UART Transmitter.
 
+Take a look at the software code `software/echo/echo.c` to see what it does.
+The testbench loads the hex file compiled from the software code, and load it to the BIOS memory in a similar manner to the `asm` test and `riscv-isa-tests`.
+
+To compile echo:
 ```shell
-# with iverilog
-make iverilog-sim tb=echo_testbench
-
-# with Vivado
-make sim tb=echo_testbench
+cd software/echo && make
 ```
 
-The testbench, acts like a host, sends multiple characters via the serial line, then waits until it receives all the characters back. In some sense, it is similar to the echo test in Lab 5, however, the UART modules are controlled by the software program (`software/echo/echo.c`) running on your RISC-V CPU.
-
-Once you pass the echo test, also try `software/c_test/c_test.c`. This test combines both UART operations and string comparison. It covers the basic functionality of the BIOS program, but is shorter and easier to debug than the BIOS testbench.
-
+To run the test:
 ```shell
-# with iverilog
-make iverilog-sim tb=c_testbench
-
-# with Vivado
-make sim tb=c_testbench
+cd hardware
+make sim/echo_tb.fst  # or .vpd
 ```
+
+The testbench acts like a host and sends multiple characters via the serial line, then waits until it receives all the characters back.
+In some sense, it is similar to the echo test in Lab 5, however, the UART modules are controlled by the software program (`software/echo/echo.c`) running on your RISC-V CPU.
+
+Once you pass the echo test, also try `sim/uart_parse_tb.v`.
+This test combines both UART operations and string comparison.
+It covers the basic functionality of the BIOS program, but is shorter and easier to debug than the BIOS testbench.
 
 ## BIOS and Programming your CPU
-
-We have provided a BIOS program in `software/bios151v3` that allows you to interact with your CPU and download other programs over UART.
+We have provided a BIOS program in `software/bios` that allows you to interact with your CPU and download other programs over UART.
 The BIOS is just an infinite loop that reads from the UART, checks if the input string matches a known control sequence, and then performs an associated action.
-For detailed information on the BIOS, see Appendix \ref{sec:biosinfo}.
+For detailed information on the BIOS, see **TODO: BIOS appendix**
 
-Before running the BIOS program on your FPGA, please do the final simulation test with the `sim/bios_testbench.v`. The testbench emulates the interaction between the host and your CPU via the serial lines orchestrated by the BIOS program. It tests four basic functions of the BIOS program: sending invalid command, storing to an address (in \texttt{IMem} or \texttt{DMem}), loading from an address (in \texttt{IMem} or \texttt{DMem}), and jumping to an address (from BIOS to IMem).
+Before running the BIOS program on your FPGA, run the `sim/bios_tb.v` testbench.
+It testbench emulates the interaction between the host and your CPU via the serial lines orchestrated by the BIOS program.
 
-```shell
-# with iverilog
-make iverilog-sim tb=bios_testbench
-
-# with Vivado
-make sim tb=bios_testbench
-```
+It tests four basic functions of the BIOS program: sending an invalid command, storing to an address (in `imem` or `dmem`), loading from an address (in `imem` or `dmem`), and jumping to an address (from `bios_mem` to `imem`).
 
 Once you pass the BIOS testbench, you can implement and test your processor on the FPGA!
 
+### BIOS on FPGA
 To run the BIOS:
 
-- Verify that the stack pointer and .text segment offset are set properly in `start.s` and `bios151v3.ld` in software/bios151v3 directory
-- Build a bitstream and program the FPGA. Run `make write-bitstream` in `hardware` to generate a bitstream to your project, then `make program-fpga bs=bitstream_files/z1top.bit` to program the FPGA (if you are programming the FPGA from a lab machine with the Hardware Server, make sure that you update the port number in `hardware/scripts/program_fpga.tcl` to your assigned port number).
+- Verify that the stack pointer and .text segment offset are set properly in `start.s` and `bios.ld` in `software/bios` directory
+- Build a bitstream and program the FPGA.
 - Use screen to access the serial port:
-    ```shell
-    screen $SERIALTTY 115200
-    # or
-    # screen /dev/ttyUSB0 115200
-    ```
+```shell
+screen $SERIALTTY 115200
+# or
+# screen /dev/ttyUSB0 115200
+```
 - Press the reset button to make the CPU PC go to the start of BIOS memory
 
 Close screen using `Ctrl-a Shift-k`, or other students won't be able to use the serial port!
 If you can't access the serial port you can run `killscreen` to kill all screen sessions.
 
+### BIOS Commands
 If all goes well, you should see a `151 >` prompt after pressing return. The following commands are available:
 
 - `jal <address>`: Jump to address (hex).
@@ -466,19 +458,18 @@ If all goes well, you should see a `151 >` prompt after pressing return. The fol
 As an example, running `sw cafef00d 10000000` should write to the data memory and running `lw 10000000` should print the output `10000000: cafef00d`.
 Please also pay attention that writes to the instruction memory (`sw ffffffff 20000000`) do not write to the data memory, i.e. `lw 10000000` still should yield `cafef00d`.
 
-In addition to the command interface, the BIOS allows you to load programs to the CPU. \textit{With screen closed}, run:
+In addition to the command interface, the BIOS allows you to load programs to the CPU. **With screen closed**, run:
 ```shell
-    scripts/hex_to_serial <mif_file> <address>
+./scripts/hex_to_serial <hex_file> <address>
 ```
 
-This stores the `.mif` file at the specified hex address.
-In order to write into both the data and instruction memories, \textbf{remember to set the top nibble to 0x3}
+This stores the `.hex` file at the specified hex address.
+In order to write into both the data and instruction memories, **remember to set the top nibble to 0x3**.
+(i.e. `scripts/hex_to_serial echo.hex 30000000`, assuming the `.ld` file sets the base address to `0x10000000`).
 
-(i.e. `scripts/hex_to_serial echo.mif 30000000`, assuming the `.ld` file sets the base address to `0x10000000`).
-
-You also need to ensure that the stack and base address are set properly (See Section toolchain).
-For example, before making the `mmult` program you should set the set the base address to `0x10000000` (see mmult).
-Therefore, when loading the `mmult` program you should load it at the base address: `scripts/hex_to_serial mmult.mif 30000000`.
+You also need to ensure that the stack and base address are set properly.
+For example, before making the `mmult` program you should set the set the base address to `0x10000000`.
+Therefore, when loading the `mmult` program you should load it at the base address: `./scripts/hex_to_serial mmult.hex 30000000`.
 Then, you can jump to the loaded `mmult` program in in your screen session by using `jal 10000000`.
 
 ## Target Clock Frequency
@@ -487,15 +478,15 @@ It should be easy to meet timing at 50 MHz.
 Look at the timing report to see if timing is met.
 If you failed, the timing reports specify the critical path you should optimize.
 
-For this checkpoint, we will allow you to demonstrate the CPU working at 50 MHz, but for the final checkoff at the end of the semester, you will need to optimize for a higher clock speed ($\geq$ 100MHz) for full credit.
+For this checkpoint, we will allow you to demonstrate the CPU working at 50 MHz, but for the final checkoff at the end of the semester, you will need to optimize for a higher clock speed (> 100MHz) for full credit.
 Details on how to build your FPGA design with a different clock frequency will come later.
 
 ## Matrix Multiply
-To check the correctness and performance of your processor we have provided a benchmark in `software/mmult/` which performs matrix multiplication.
-You should be able to load it into your processor in the same way as loading the echo program.
+To check the correctness and performance of your processor we have provided a benchmark in `software/mmult` which performs matrix multiplication.
+You should be able to load it into your processor in the same way as loading the `echo` program.
 
-This program computes $S=AB$, where $A$ and $B$ are 64$\times$64 matrices.
-The program will print a checksum and the counters discussed in Section ~\ref{mmio}.
+This program computes `S=AB`, where `A` and `B` are `64 X 64` matrices.
+The program will print a checksum and the counters discussed in [Memory Mapped IO](#memory-mapped-io).
 The correct checksum is `0001f800`.
 If you do not get this, there is likely a problem in your CPU with one of the instructions that is used by the BIOS but not mmult.
 
@@ -504,12 +495,13 @@ The matrix multiply program requires that the stack pointer and the offset of th
 The stack pointer (set in `start.s`) should start near the top of DMEM to avoid corrupting the program instructions and data.
 It should be set to `0x1000fff0` and the stack grows downwards.
 
-The .text segment offset (set in `mmult.ld`) needs to accommodate the full set of instructions and static data (three 64$\times$64 matrices) in the mmult binary.
+The .text segment offset (set in `mmult.ld`) needs to accommodate the full set of instructions and static data (three `64 X 64` matrices) in the mmult binary.
 It should be set to the base of DMEM: `0x10000000`.
 
 The program will also output the values of your instruction and cycle counters (in hex).
 These can be used to calculate the CPI for this program.
-Your target CPI should not be greater than 1.2.
+Your target CPI should **not be greater than 1.2**.
+
 If your CPI exceeds this value, you will need to modify your datapath and pipeline to reduce the number of bubbles inserted for resolving control hazards (since they are the only source of extra latency in our processor).
 This might involve performing naive branch prediction or moving the jalr address calculation to an earlier stage.
 
@@ -537,13 +529,13 @@ It might seem overwhelming to implement all the functionality that your processo
 - **Implement data forwarding for data hazards.** Add forwarding muxes and forward the outputs of the ALU and memory stage. Remember that you might have to forward to ALU input A, ALU input B, and data to write to memory. Test forwarding aggressively; most of your bugs will come from incomplete or faulty forwarding logic. Test forwarding from memory and from the ALU, and with control instructions.
 - **Add BIOS memory reads.** Add the BIOS memory block RAM to the memory stage to be able to load data from the BIOS memory. Write assembly tests that contain some static data stored in the BIOS memory and verify that you can read that data.
 - **Add Inst memory writes and reads.** Add the instruction memory block RAM to the memory stage to be able to write data to it when executing inside the BIOS memory. Also add the instruction memory block RAM to the instruction fetch stage to be able to read instructions from the inst memory. Write tests that first write instructions to the instruction memory, and then jump (using jalr) to instruction memory to see that the right instructions are executed.
-- **Run Riscv151\_testbench.** The testbench verifies if your Riscv151 is able to read the RV32I instructions from instruction memory block RAM, execute, and write data to either the Register File or data memory block RAM.
-- **Run isa\_testbench.** The testbench works with the RISCV ISA tests. This comprehensive test suites verifies the functionality of your processor.
-- **Run software\_testbench.** The testbench works with the software programs under `software` using the CSR check mechanism as similar to the `isa_testbench`. Try testing with all the supported software programs since they could expose more hazard bugs.
+- **Run `cpu_tb`.** The testbench verifies if your CPU is able to read the RV32I instructions from instruction memory block RAM, execute, and write data to either the Register File or data memory block RAM.
+- **Run `isa_tb`.** The testbench works with the RISCV ISA tests. This comprehensive test suites verifies the functionality of your processor.
+- **Run `c_tests_tb`.** The testbench works with the software programs under `software` using the CSR check mechanism as similar to the `isa_tb`. Try testing with all the supported software programs since they could expose more hazard bugs.
 - **Add instruction and cycle counters.** Begin to add the memory mapped IO components, by first adding the cycle and instruction counters. These are just 2 32-bit registers that your CPU should update on every cycle and every instruction respectively. Write tests to verify that your counters can be reset with a `sw` instruction, and can be read from using a `lw` instruction.
-- **Integrate UART.** Add the UART to the memory stage, in parallel with the data, instruction, and BIOS memories. Detect when an instruction is accessing the UART and route the data to the UART accordingly. Make sure that you are setting the UART ready/valid control signals properly as you are feeding or retrieving data from it. We have provided you with the `echo_testbench` which performs a test of the UART. In addition, also test with `c_testbench` and `bios_testbench`.
+- **Integrate UART.** Add the UART to the memory stage, in parallel with the data, instruction, and BIOS memories. Detect when an instruction is accessing the UART and route the data to the UART accordingly. Make sure that you are setting the UART ready/valid control signals properly as you are feeding or retrieving data from it. We have provided you with the `echo_tb` which performs a test of the UART. In addition, also test with `uart_parse_tb` and `bios_tb`.
 - **Run the BIOS.** If everything so far has gone well, program the FPGA. Verify that the BIOS performs as expected. As a precursor to this step, you might try to build a bitstream with the BIOS memory initialized with the echo program.
-- **Run matrix multiply.** Load the `mmult` program with the `hex_to_serial` utility (located under \texttt{scripts/}), and run `mmult` on the FPGA. Verify that it returns the correct checksum.
+- **Run matrix multiply.** Load the `mmult` program with the `hex_to_serial` utility, and run `mmult` on the FPGA. Verify that it returns the correct checksum.
 - **Check CPI.** Compute the CPI when running the `mmult` program. If you achieve a CPI 1.2 or smaller, that is acceptable, but if your CPI is larger than that, you should think of ways to reduce it.
 
 ## Checkoff
@@ -551,74 +543,69 @@ The checkoff is divided into two stages: block diagram/design and implementation
 The second part will require significantly more time and effort than the first one.
 As such, completing the block diagram in time for the design review is crucial to your success in this project.
 
-### Checkpoint 0: Block Diagram
+### Checkpoint 1: Block Diagram
 This checkpoint requires a detailed block diagram of your datapath. The diagram should have a greater level of detail than a high level RISC datapath diagram.
 You may complete this electronically or by hand.
 
 If working by hand, we recommend working in pencil and combining several sheets of paper for a larger workspace. If doing it electronically, you can use Inkscape, Google Drawings, draw.io or any program you want.
 
-You should be able to describe in detail any smaller sub-blocks in your diagram. **Though the diagrams from textbooks/lecture notes are a decent starting place, remember that they often use asynchronous-read RAMs for the instruction and data memories, and we will be using synchronous-read block RAMs.**
+You should be able to describe in detail any smaller sub-blocks in your diagram.
+**Though the diagrams from textbooks/lecture notes are a decent starting place, remember that they often use asynchronous-read RAMs for the instruction and data memories, and we will be using synchronous-read block RAMs.**
 
 Additionally, you will be asked to provide short answers to the following questions based on how you structure your block diagram. The questions are intended to make you consider all possible cases that might happen when your processor execute instructions, such as data or control hazards. It might be a good idea to take a moment to think of the questions first, then draw your diagram to address them.
 
-## Questions
-
-- How many stages is the datapath you've drawn? (i.e. How many cycles does it take to execute 1 instruction?)
-- How do you handle ALU $\rightarrow$ ALU hazards?
-```
+#### Checkpoint 1 Questions
+1. How many stages is the datapath you've drawn? (i.e. How many cycles does it take to execute 1 instruction?)
+1. How do you handle ALU → ALU hazards?
+```asm
 addi x1, x2, 100
 addi x2, x1, 100
 ```
-
-- How do you handle ALU $\rightarrow$ MEM hazards?
-```
+1. How do you handle ALU → MEM hazards?
+```asm
 addi x1, x2, 100
 sw x1, 0(x3)
 ```
-
-- How do you handle MEM $\rightarrow$ ALU hazards?
-```
+1. How do you handle MEM → ALU hazards?
+```asm
 lw x1, 0(x3)
 addi x1, x1, 100
 ```
-
-- How do you handle MEM $\rightarrow$ MEM hazards?
-```
+1. How do you handle MEM → MEM hazards?
+```asm
 lw x1, 0(x2)
 sw x1, 4(x2)
 ```
 also consider:
-```
+```asm
 lw x1, 0(x2)
 sw x3, 0(x1)
 ```
-
-- Do you need special handling for 2 cycle apart hazards?
-```
+1. Do you need special handling for 2 cycle apart hazards?
+```asm
 addi x1, x2, 100
 nop
 addi x1, x1, 100
 ```
+1. How do you handle branch control hazards? (What is the mispredict latency, what prediction scheme are you using, are you just injecting NOPs until the branch is resolved, what about data hazards in the branch?)
+1. How do you handle jump control hazards? Consider jal and jalr separately. What optimizations can be made to special-case handle jal?
+1. What is the most likely critical path in your design?
+1. Where do the UART modules, instruction, and cycle counters go? How are you going to drive `uart_tx_data_in_valid` and `uart_rx_data_out_ready` (give logic expressions)?
+1. What is the role of the CSR register? Where does it go?
+1. When do we read from BIOS for instructions? When do we read from IMem for instructions? How do we switch from BIOS address space to IMem address space? In which case can we write to IMem, and why do we need to write to IMem? How do we know if a memory instruction is intended for DMem or any IO device?
 
-- How do you handle branch control hazards? (What is the mispredict latency, what prediction scheme are you using, are you just injecting NOPs until the branch is resolved, what about data hazards in the branch?)
-- How do you handle jump control hazards? Consider jal and jalr separately. What optimizations can be made to special-case handle jal?
-- What is the most likely critical path in your design?
-- Where do the UART modules, instruction, and cycle counters go? How are you going to drive `uart_tx_data_in_valid` and `uart_rx_data_out_ready` (give logic expressions)?
-- What is the role of the CSR register? Where does it go?
-- When do we read from BIOS for instructions? When do we read from IMem for instructions? How do we switch from BIOS address space to IMem address space? In which case can we write to IMem, and why do we need to write to IMem? How do we know if a memory instruction is intended for DMem or any IO device?
+Commit your block diagram and your writeup to your team repository under `fa21_teamXX/docs`. Please also remember to push your working IO circuits to your Github repository.
 
-Commit your block diagram and your writeup to your team repository under `fa21_teamXX/docs` by \blockDiagramDueDate. Please also remember to push your working IO circuits to your Github repository.
-
-### Checkpoint 1: Base RISCV151 System
+### Checkpoint 2: Base RISC-V Core
 This checkpoint requires a fully functioning three stage RISC-V CPU as described in this specification.
 Checkoff will consist of a demonstration of the BIOS functionality, loading a program (`echo` and `mmult`) over the UART, and successfully jumping to and executing the program.
 
-Additionally, please find the maximum achievable frequency of your CPU implementation. To do so, lower the `CPU_CLOCK_PERIOD` (starting at 20, with a step size of 1) in `hardware/src/z1top.v` until the Implementation fails to meet timing. Please report the critical path in your implementation.
+<!-- Additionally, please find the maximum achievable frequency of your CPU implementation. To do so, lower the `CPU_CLOCK_PERIOD` (starting at 20, with a step size of 1) in `hardware/src/z1top.v` until the Implementation fails to meet timing. Please report the critical path in your implementation. -->
 
-\textbf{\baseCPUTaskName \space materials should be committed to your project repository by \baseCPUDueDate.}
+Commit all your source files to your project repository.
 
 ### Checkpoints 0 & 1 Deliverables Summary
 | Deliverable                                  | Due Date | Description                                                                                                                                                                                                                                                                                                                                                                                            |
 |----------------------------------------------|----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Block Diagram, RISC-V ISA Questions, IO code |          | Push your block diagram, your writeup, and IO code to your Github repository. In-lab Checkoff: Sit down with a GSI and go over your design in detail.                                                                                                                                                                                                                                                  |
-| RISC-V CPU, Fmax and Crit. path              |          | Check in code to Github. In-lab Checkoff: Demonstrate that the BIOS works, you can use `hex_to_serial` to load the `echo` program, `jal` to it from the BIOS, and have that program successfully execute. Load the mmult program with `hex_to_serial`, `jal` to it, and have it execute successfully and return the benchmarking results and correct checksum. Your CPI should not be greater than 1.2 |
+| Block Diagram, RISC-V ISA Questions, IO code | see [overview](./overview.md) | Push your block diagram, your writeup, and IO code to your Github repository. In-lab Checkoff: Sit down with a GSI and go over your design in detail.                                                                                                                                                                                                                                                  |
+| RISC-V CPU, Fmax and Crit. path              | see [overview](./overview.md) | Check in code to Github. In-lab Checkoff: Demonstrate that the BIOS works, you can use `hex_to_serial` to load the `echo` program, `jal` to it from the BIOS, and have that program successfully execute. Load the mmult program with `hex_to_serial`, `jal` to it, and have it execute successfully and return the benchmarking results and correct checksum. Your CPI should not be greater than 1.2 |
