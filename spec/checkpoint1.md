@@ -69,7 +69,15 @@ To compile `software` go into a program directory and run `make`.
 To build a bitstream run `make impl` in `hardware`.
 
 ## RISC-V 151 ISA
-The [table here](./isa.pdf) contains all of the instructions your processor is responsible for supporting.
+The table below contains all of the instructions your processor is responsible for supporting.
+
+<p align=center>
+  <a href="./isa.pdf"><img width=500 src="./isa.png"/></a>
+</p>
+<p align=center>
+  <em>RISC-V RV32I + CSR ISA to implement in your processor</em>
+</p>
+
 It contains most of the instructions specified in the RV32I Base Instruction set, and allows us to maintain a relatively simple design while still being able to use a C compiler and write interesting programs to run on the processor.
 For the specific details of each instruction, refer to sections 2.2 through 2.6 in the [RISC-V ISA Manual](https://riscv.org/wp-content/uploads/2017/05/riscv-spec-v2.2.pdf).
 
