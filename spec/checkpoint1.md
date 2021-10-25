@@ -12,10 +12,10 @@ The first and second checkpoints in this project is designed to guide the develo
 
 ## Setting up Your Repository
 The project skeleton files are available on Github.
-The suggested way for initializing your repository (`fa21_teamXX`) with the skeleton files is as follows:
+The suggested way for initializing your repository (`fa21_fpga_teamXX`) with the skeleton files is as follows:
 
 ```bash
-git clone git@github.com:EECS150/fa21_teamXX.git
+git clone git@github.com:EECS150/fa21_fpga_teamXX.git
 git remote add skeleton git@github.com:EECS150/project_skeleton_fa21.git
 git pull skeleton master
 git push origin master
@@ -602,7 +602,7 @@ addi x1, x1, 100
 11. What is the role of the CSR register? Where does it go?
 12. When do we read from BIOS for instructions? When do we read from IMem for instructions? How do we switch from BIOS address space to IMem address space? In which case can we write to IMem, and why do we need to write to IMem? How do we know if a memory instruction is intended for DMem or any IO device?
 
-Commit your block diagram and your writeup to your team repository under `fa21_teamXX/docs`. Please also remember to push your working IO circuits to your Github repository.
+Commit your block diagram and your writeup to your team repository under `fa21_fpga_teamXX/docs`. Please also remember to push your working IO circuits to your Github repository.
 
 ### Checkpoint 2: Base RISC-V Core
 This checkpoint requires a fully functioning three stage RISC-V CPU as described in this specification.
