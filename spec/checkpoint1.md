@@ -324,7 +324,7 @@ You will need the CSR instructions to work before you can use this test suite, a
 
 To run the ISA tests, first pull the latest skeleton changes:
 ``` shell
-git pull staff master
+git pull skeleton master
 git submodule update --init --recursive
 ```
 
