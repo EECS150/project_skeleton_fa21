@@ -526,7 +526,7 @@ However, do NOT under any circumstances share source code.
 Once you're tired, go home and **sleep**. When you come back you will know how to solve your problem.
 
 ### How To Get Started
-It might seem overwhelming to implement all the functionality that your processor must support. The best way to implement your processor is in small increments, checking the correctness of your processor at each step along the way. Here is a guide that should help you plan out Checkpoint 0 and 1:
+It might seem overwhelming to implement all the functionality that your processor must support. The best way to implement your processor is in small increments, checking the correctness of your processor at each step along the way. Here is a guide that should help you plan out Checkpoint 1 and 2:
 
 - **Design.** You should start with a comprehensive and detailed design/schematic. Enumerate all the control signals that you will need. Be careful when designing the memory fetch stage since all the memories we use (BIOS, instruction, data, IO) are synchronous.
 - **First steps.** Implementing some modules that are easy to write and test.
@@ -612,7 +612,7 @@ Checkoff will consist of a demonstration of the BIOS functionality, loading a pr
 
 Commit all your source files to your project repository.
 
-### Checkpoints 0 & 1 Deliverables Summary
+### Checkpoints 1 & 2 Deliverables Summary
 | Deliverable                                  | Due Date | Description                                                                                                                                                                                                                                                                                                                                                                                            |
 |----------------------------------------------|----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Block Diagram, RISC-V ISA Questions, IO code | see [overview](./overview.md) | Push your block diagram, your writeup, and IO code to your Github repository. In-lab Checkoff: Sit down with a GSI and go over your design in detail.                                                                                                                                                                                                                                                  |
