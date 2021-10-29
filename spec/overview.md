@@ -35,7 +35,7 @@ Here is a description of each checkpoint and how many weeks will be alloted to e
 
 ### Checkpoint 2 (Pipelined RISC-V CPU)
 - **Due:** November 12, Friday (1 week)
-- Implement a fully functional RISC-V processor core in Verilog. Your processor core should be able to run the \textbf{mmult} demo successfully.
+- Implement a fully functional RISC-V processor core in Verilog. Your processor core should be able to run the `mmult` demo successfully.
 - See the [checkpoint 1/2 spec](./checkpoint1.md)
 
 ### Checkpoint 3 (IO / Audio Circuit Integration)
