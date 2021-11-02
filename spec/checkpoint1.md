@@ -340,9 +340,12 @@ To run the tests run:
 cd hardware/sim
 make isa-tests  # to run all ISA tests
 make sim/isa/lw.fst  # to run a specific test
+grep -r -i "failed" sim/isa/*.log  # to check for failures
+grep -r -i "passed" sim/isa/*.log  # to check for passing tests
+grep -r -i "timeout" sim/isa/*.log  # to check for tests that timed out
 ```
 
-The simulation should print out which tests passed or failed and their simulation cycles.
+The simulation log details which tests passed and failed and the number of clock cycles elapsed.
 If you're failing a test, debug using the test assembly file in `software/riscv-isa-tests/riscv-tests/isa/rv32ui` or the generated assembly dump.
 
 The assembly dump files are extremely helpful in debugging at this stage.
@@ -351,6 +354,8 @@ The CSR output from the simulation indicates which subtest is failing to help yo
 
 The `RESET_PC` parameter is used in `isa_tb` to start the test in the IMEM instead of the BIOS.
 Make sure you have used it in `riscv_core/cpu.v`.
+
+The `fence_i` test may fail, and that is **OK**.
 
 ### RISC-V Programs
 
