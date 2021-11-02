@@ -64,12 +64,14 @@ module cpu_tb();
       for (i = 0; i < `IMEM_PATH.DEPTH; i = i + 1) begin
         `IMEM_PATH.mem[i] = 0;
       end
-
-      @(negedge clk);
-      rst = 1;
-      @(negedge clk);
-      rst = 0;
     end
+  endtask
+
+  task reset_cpu;
+    @(negedge clk);
+    rst = 1;
+    @(negedge clk);
+    rst = 0;
   endtask
 
   task init_rf;
@@ -226,6 +228,8 @@ module cpu_tb();
     `IMEM_PATH.mem[INST_ADDR + 11] = {`FNC7_0, SHAMT, RS1, `FNC_SRL_SRA, 5'd14, `OPC_ARI_ITYPE};
     `IMEM_PATH.mem[INST_ADDR + 12] = {`FNC7_1, SHAMT, RS1, `FNC_SRL_SRA, 5'd15, `OPC_ARI_ITYPE};
 
+    reset_cpu();
+
     check_result_rf(5'd3,  32'h00000064, "R-Type ADD");
     check_result_rf(5'd4,  32'hfffffed4, "R-Type SUB");
     check_result_rf(5'd5,  32'hffff9c00, "R-Type SLL");
@@ -259,6 +263,8 @@ module cpu_tb();
     `IMEM_PATH.mem[INST_ADDR + 3] = {IMM[11:0], RS1, `FNC_XOR,     5'd6, `OPC_ARI_ITYPE};
     `IMEM_PATH.mem[INST_ADDR + 4] = {IMM[11:0], RS1, `FNC_OR,      5'd7, `OPC_ARI_ITYPE};
     `IMEM_PATH.mem[INST_ADDR + 5] = {IMM[11:0], RS1, `FNC_AND,     5'd8, `OPC_ARI_ITYPE};
+
+    reset_cpu();
 
     check_result_rf(5'd3,  32'hfffffed4, "I-Type ADD");
     check_result_rf(5'd4,  32'h00000000, "I-Type SLT");
@@ -299,6 +305,8 @@ module cpu_tb();
     `IMEM_PATH.mem[INST_ADDR + 17] = {IMM3[11:0], 5'd1, `FNC_LBU, 5'd18, `OPC_LOAD};
 
     `DMEM_PATH.mem[DATA_ADDR] = 32'hdeadbeef;
+
+    reset_cpu();
 
     check_result_rf(5'd2,  32'hdeadbeef, "I-Type LW");
 
@@ -363,9 +371,9 @@ module cpu_tb();
     `IMEM_PATH.mem[INST_ADDR + 0] = {IMM0[11:5], 5'd1, 5'd2,  `FNC_SW, IMM0[4:0], `OPC_STORE};
 
     `IMEM_PATH.mem[INST_ADDR + 1] = {IMM0[11:5], 5'd1, 5'd3,  `FNC_SH, IMM0[4:0], `OPC_STORE};
-    `IMEM_PATH.mem[INST_ADDR + 2] = {IMM1[11:5], 5'd1, 5'd4,  `FNC_SH, IMM1[4:0], `OPC_STORE};
+    // `IMEM_PATH.mem[INST_ADDR + 2] = {IMM1[11:5], 5'd1, 5'd4,  `FNC_SH, IMM1[4:0], `OPC_STORE}; // unaligned sh
     `IMEM_PATH.mem[INST_ADDR + 3] = {IMM2[11:5], 5'd1, 5'd5,  `FNC_SH, IMM2[4:0], `OPC_STORE};
-    `IMEM_PATH.mem[INST_ADDR + 4] = {IMM3[11:5], 5'd1, 5'd6,  `FNC_SH, IMM3[4:0], `OPC_STORE};
+    // `IMEM_PATH.mem[INST_ADDR + 4] = {IMM3[11:5], 5'd1, 5'd6,  `FNC_SH, IMM3[4:0], `OPC_STORE}; // unaligned sh
 
     `IMEM_PATH.mem[INST_ADDR + 5] = {IMM0[11:5], 5'd1, 5'd7,  `FNC_SB, IMM0[4:0], `OPC_STORE};
     `IMEM_PATH.mem[INST_ADDR + 6] = {IMM1[11:5], 5'd1, 5'd8,  `FNC_SB, IMM1[4:0], `OPC_STORE};
@@ -381,12 +389,14 @@ module cpu_tb();
     `DMEM_PATH.mem[DATA_ADDR7] = 0;
     `DMEM_PATH.mem[DATA_ADDR8] = 0;
 
+    reset_cpu();
+
     check_result_dmem(DATA_ADDR0, 32'h12345678, "S-Type SW");
 
     check_result_dmem(DATA_ADDR1, 32'h00005678, "S-Type SH 1");
-    check_result_dmem(DATA_ADDR2, 32'h00005678, "S-Type SH 2");
+    // check_result_dmem(DATA_ADDR2, 32'h00005678, "S-Type SH 2");
     check_result_dmem(DATA_ADDR3, 32'h56780000, "S-Type SH 3");
-    check_result_dmem(DATA_ADDR4, 32'h56780000, "S-Type SH 4");
+    // check_result_dmem(DATA_ADDR4, 32'h56780000, "S-Type SH 4");
 
     check_result_dmem(DATA_ADDR5, 32'h00000078, "S-Type SB 1");
     check_result_dmem(DATA_ADDR6, 32'h00007800, "S-Type SB 2");
@@ -402,6 +412,8 @@ module cpu_tb();
 
     `IMEM_PATH.mem[INST_ADDR + 0] = {IMM[31:12], 5'd3, `OPC_LUI};
     `IMEM_PATH.mem[INST_ADDR + 1] = {IMM[31:12], 5'd4, `OPC_AUIPC};
+
+    reset_cpu();
 
     check_result_rf(3,  32'h7fff0000, "U-Type LUI");
     check_result_rf(4,  32'h8fff0004, "U-Type AUIPC"); // assume PC is 1000_0004
@@ -423,6 +435,8 @@ module cpu_tb();
     `IMEM_PATH.mem[INST_ADDR + 1]   = {`FNC7_0, 5'd2, 5'd1, `FNC_ADD_SUB, 5'd6, `OPC_ARI_RTYPE};
     `IMEM_PATH.mem[JUMP_ADDR[13:0]] = {`FNC7_0, 5'd4, 5'd3, `FNC_ADD_SUB, 5'd7, `OPC_ARI_RTYPE};
 
+    reset_cpu();
+
     check_result_rf(5'd5, 32'h1000_0004, "J-Type JAL");
     check_result_rf(5'd7, 700, "J-Type JAL");
     check_result_rf(5'd6, 0, "J-Type JAL");
@@ -442,6 +456,8 @@ module cpu_tb();
     `IMEM_PATH.mem[INST_ADDR + 0]   = {IMM[11:0], 5'd1, 3'b000, 5'd5, `OPC_JALR};
     `IMEM_PATH.mem[INST_ADDR + 1]   = {`FNC7_0,   5'd2, 5'd1, `FNC_ADD_SUB, 5'd6, `OPC_ARI_RTYPE};
     `IMEM_PATH.mem[JUMP_ADDR[13:0]] = {`FNC7_0,   5'd4, 5'd3, `FNC_ADD_SUB, 5'd7, `OPC_ARI_RTYPE};
+
+    reset_cpu();
 
     check_result_rf(5'd5, 32'h1000_0004, "J-Type JALR");
     check_result_rf(5'd7, 700, "J-Type JALR");
@@ -510,6 +526,8 @@ module cpu_tb();
       `IMEM_PATH.mem[INST_ADDR + 1]   = {`FNC7_0, 5'd4, 5'd3, `FNC_ADD_SUB, 5'd5, `OPC_ARI_RTYPE};
       `IMEM_PATH.mem[JUMP_ADDR[13:0]] = {`FNC7_0, 5'd4, 5'd3, `FNC_ADD_SUB, 5'd6, `OPC_ARI_RTYPE};
 
+      reset_cpu();
+
       check_result_rf(5'd5, 0,   BR_NAME_TK1[i]);
       check_result_rf(5'd6, 700, BR_NAME_TK2[i]);
 
@@ -524,6 +542,7 @@ module cpu_tb();
       `IMEM_PATH.mem[INST_ADDR + 0] = {IMM[12], IMM[10:5], 5'd2, 5'd1, BR_TYPE[i], IMM[4:1], IMM[11], `OPC_BRANCH};
       `IMEM_PATH.mem[INST_ADDR + 1] = {`FNC7_0, 5'd4, 5'd3, `FNC_ADD_SUB, 5'd5, `OPC_ARI_RTYPE};
 
+      reset_cpu();
       check_result_rf(5'd5, 700, BR_NAME_NTK[i]);
     end
 
@@ -537,6 +556,8 @@ module cpu_tb();
 
     `IMEM_PATH.mem[INST_ADDR + 0] = {12'h51e, 5'd1,     3'b001, 5'd0, `OPC_CSR};
     `IMEM_PATH.mem[INST_ADDR + 1] = {12'h51e, IMM[4:0], 3'b101, 5'd0, `OPC_CSR};
+
+    reset_cpu();
 
     current_test_id = current_test_id + 1;
     current_test_type = "CSRRW Test";
@@ -562,6 +583,7 @@ module cpu_tb();
     INST_ADDR = 14'h0000;
     `IMEM_PATH.mem[INST_ADDR + 0] = {`FNC7_0, 5'd1, 5'd2, `FNC_ADD_SUB, 5'd3, `OPC_ARI_RTYPE};
     `IMEM_PATH.mem[INST_ADDR + 1] = {`FNC7_0, 5'd3, 5'd4, `FNC_ADD_SUB, 5'd5, `OPC_ARI_RTYPE};
+    reset_cpu();
     check_result_rf(5'd5, `RF_PATH.mem[1] + `RF_PATH.mem[2] + `RF_PATH.mem[4], "Hazard 1");
 
     // ALU->ALU hazard (RS2)
@@ -570,6 +592,7 @@ module cpu_tb();
     INST_ADDR = 14'h0000;
     `IMEM_PATH.mem[INST_ADDR + 0] = {`FNC7_0, 5'd1, 5'd2, `FNC_ADD_SUB, 5'd3, `OPC_ARI_RTYPE};
     `IMEM_PATH.mem[INST_ADDR + 1] = {`FNC7_0, 5'd4, 5'd3, `FNC_ADD_SUB, 5'd5, `OPC_ARI_RTYPE};
+    reset_cpu();
     check_result_rf(5'd5, `RF_PATH.mem[1] + `RF_PATH.mem[2] + `RF_PATH.mem[4], "Hazard 2");
 
     // Two-cycle ALU->ALU hazard (RS1)
@@ -579,7 +602,7 @@ module cpu_tb();
     `IMEM_PATH.mem[INST_ADDR + 0] = {`FNC7_0, 5'd1, 5'd2, `FNC_ADD_SUB, 5'd3, `OPC_ARI_RTYPE};
     `IMEM_PATH.mem[INST_ADDR + 1] = {`FNC7_0, 5'd4, 5'd5, `FNC_ADD_SUB, 5'd6, `OPC_ARI_RTYPE};
     `IMEM_PATH.mem[INST_ADDR + 2] = {`FNC7_0, 5'd3, 5'd7, `FNC_ADD_SUB, 5'd8, `OPC_ARI_RTYPE};
-
+    reset_cpu();
     check_result_rf(5'd8, `RF_PATH.mem[1] + `RF_PATH.mem[2] + `RF_PATH.mem[7], "Hazard 3");
 
     // Two-cycle ALU->ALU hazard (RS2)
@@ -589,7 +612,7 @@ module cpu_tb();
     `IMEM_PATH.mem[INST_ADDR + 0] = {`FNC7_0, 5'd1, 5'd2, `FNC_ADD_SUB, 5'd3, `OPC_ARI_RTYPE};
     `IMEM_PATH.mem[INST_ADDR + 1] = {`FNC7_0, 5'd4, 5'd5, `FNC_ADD_SUB, 5'd6, `OPC_ARI_RTYPE};
     `IMEM_PATH.mem[INST_ADDR + 2] = {`FNC7_0, 5'd7, 5'd3, `FNC_ADD_SUB, 5'd8, `OPC_ARI_RTYPE};
-
+    reset_cpu();
     check_result_rf(5'd8, `RF_PATH.mem[1] + `RF_PATH.mem[2] + `RF_PATH.mem[7], "Hazard 4");
 
     // Two ALU hazards
@@ -599,7 +622,7 @@ module cpu_tb();
     `IMEM_PATH.mem[INST_ADDR + 0] = {`FNC7_0, 5'd1, 5'd2, `FNC_ADD_SUB, 5'd3, `OPC_ARI_RTYPE};
     `IMEM_PATH.mem[INST_ADDR + 1] = {`FNC7_0, 5'd4, 5'd3, `FNC_ADD_SUB, 5'd5, `OPC_ARI_RTYPE};
     `IMEM_PATH.mem[INST_ADDR + 2] = {`FNC7_0, 5'd5, 5'd6, `FNC_ADD_SUB, 5'd7, `OPC_ARI_RTYPE};
-
+    reset_cpu();
     check_result_rf(5'd7, `RF_PATH.mem[1] + `RF_PATH.mem[2] + `RF_PATH.mem[4] + `RF_PATH.mem[6], "Hazard 5");
 
     // ALU->MEM hazard
@@ -611,7 +634,7 @@ module cpu_tb();
     DATA_ADDR       = (`RF_PATH.mem[4] + IMM[11:0]) >> 2;
     `IMEM_PATH.mem[INST_ADDR + 0] = {`FNC7_0, 5'd1, 5'd2, `FNC_ADD_SUB, 5'd3, `OPC_ARI_RTYPE};
     `IMEM_PATH.mem[INST_ADDR + 1] = {IMM[11:5], 5'd3, 5'd4, `FNC_SW, IMM[4:0], `OPC_STORE};
-
+    reset_cpu();
     check_result_dmem(DATA_ADDR, `RF_PATH.mem[1] + `RF_PATH.mem[2], "Hazard 6");
 
     // MEM->ALU hazard
@@ -624,7 +647,7 @@ module cpu_tb();
     `DMEM_PATH.mem[DATA_ADDR] = 32'h12345678;
     `IMEM_PATH.mem[INST_ADDR + 0] = {IMM[11:0], 5'd1, `FNC_LW, 5'd2, `OPC_LOAD};
     `IMEM_PATH.mem[INST_ADDR + 1] = {`FNC7_0, 5'd2, 5'd3, `FNC_ADD_SUB, 5'd4, `OPC_ARI_RTYPE};
-
+    reset_cpu();
     check_result_rf(5'd4, `DMEM_PATH.mem[DATA_ADDR] + `RF_PATH.mem[3], "Hazard 7");
 
     // MEM->MEM hazard (store data)
@@ -640,7 +663,7 @@ module cpu_tb();
     `DMEM_PATH.mem[DATA_ADDR0] = 32'h12345678;
     `IMEM_PATH.mem[INST_ADDR + 0] = {IMM[11:0], 5'd1, `FNC_LW, 5'd2, `OPC_LOAD};
     `IMEM_PATH.mem[INST_ADDR + 1] = {IMM[11:5], 5'd2, 5'd4, `FNC_SW, IMM[4:0], `OPC_STORE};
-
+    reset_cpu();
     check_result_dmem(DATA_ADDR1, `DMEM_PATH.mem[DATA_ADDR0], "Hazard 8");
 
     // MEM->MEM hazard (store address)
@@ -655,7 +678,7 @@ module cpu_tb();
 
     `IMEM_PATH.mem[INST_ADDR + 0] = {IMM[11:0], 5'd1, `FNC_LW, 5'd2, `OPC_LOAD};
     `IMEM_PATH.mem[INST_ADDR + 1] = {IMM[11:5], 5'd4, 5'd2, `FNC_SW, IMM[4:0], `OPC_STORE};
-
+    reset_cpu();
     check_result_dmem(DATA_ADDR1, `RF_PATH.mem[4], "Hazard 9");
 
     // Hazard to Branch operands
@@ -670,7 +693,7 @@ module cpu_tb();
     `IMEM_PATH.mem[INST_ADDR + 2]   = {IMM[12], IMM[10:5], 5'd6, 5'd7, `FNC_BEQ, IMM[4:1], IMM[11], `OPC_BRANCH}; // Branch will be taken
     `IMEM_PATH.mem[INST_ADDR + 3]   = {`FNC7_0, 5'd8, 5'd9, `FNC_ADD_SUB, 5'd10, `OPC_ARI_RTYPE};
     `IMEM_PATH.mem[JUMP_ADDR[13:0]] = {`FNC7_1, 5'd8, 5'd9, `FNC_ADD_SUB, 5'd11, `OPC_ARI_RTYPE};
-
+    reset_cpu();
     check_result_rf(5'd10, `RF_PATH.mem[10], "Hazard 10 1"); // x10 should not be updated
     check_result_rf(5'd11, `RF_PATH.mem[9] - `RF_PATH.mem[8], "Hazard 10 2"); // x11 should be updated
 
@@ -683,7 +706,7 @@ module cpu_tb();
 
     `IMEM_PATH.mem[INST_ADDR + 0] = {IMM[20], IMM[10:1], IMM[11], IMM[19:12], 5'd1, `OPC_JAL};
     `IMEM_PATH.mem[INST_ADDR + 1] = {`FNC7_0, 5'd2, 5'd1, `FNC_ADD_SUB, 5'd3, `OPC_ARI_RTYPE};
-
+    reset_cpu();
     check_result_rf(5'd3, `RF_PATH.mem[2] + 32'h1000_0004, "Hazard 11");
 
     // JALR Writeback hazard
@@ -696,7 +719,7 @@ module cpu_tb();
 
     `IMEM_PATH.mem[INST_ADDR + 0] = {IMM[11:0], 5'd4, 3'b000, 5'd1, `OPC_JALR};
     `IMEM_PATH.mem[INST_ADDR + 1] = {`FNC7_0, 5'd2, 5'd1, `FNC_ADD_SUB, 5'd3, `OPC_ARI_RTYPE};
-
+    reset_cpu();
     check_result_rf(5'd3, `RF_PATH.mem[2] + 32'h1000_0004, "Hazard 12");
 
     // ... what else?
