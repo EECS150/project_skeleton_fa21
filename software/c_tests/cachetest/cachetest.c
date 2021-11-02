@@ -16,7 +16,7 @@ unsigned int assert_equals(unsigned int a, unsigned int b);
 int x[NUMELTS];
 
 void main() {
-
+  csr_tohost(0);
   x[0] = 1;
   int i;
   for(i = 1; i < NUMELTS; i++) {

@@ -16,7 +16,7 @@ int x[NUMELTS];
 int y[NUMELTS];
 
 void main() {
-
+  csr_tohost(0);
   int i;
   int j;
   for(i = 0; i < NUMELTS; i++) {

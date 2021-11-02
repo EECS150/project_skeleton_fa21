@@ -48,6 +48,7 @@ uart_transmitter.v
   - `src`
     - `z1top.v`: Top level module. The RISC-V CPU is instantiated here.
     - `riscv_core/cpu.v`: All of your CPU datapath and control should be contained in this file.
+    - `riscv_core/opcode.vh`: Constant definitions for various RISC-V opcodes and funct codes. Use `` `include "opcode.vh" `` to use the defines in this file.
     - `io_circuits`: Your IO circuits from the labs.
   - `sim`
     - `cpu_tb.v`: Starting point for testing your CPU. The testbench checks if your CPU can execute all the RV32I instructions (including CSR ones) correctly, and can handle some simple hazards. You should make sure that your CPU implementation passes this testbench before moving on.

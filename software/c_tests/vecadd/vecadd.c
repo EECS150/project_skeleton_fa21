@@ -14,6 +14,7 @@ static int32_t C[SIZE] = {0};
 typedef void (*entry_t)(void);
 
 int main(int argc, char**argv) {
+  csr_tohost(0);
   int8_t buffer[BUF_LEN];
 
   int i, j;

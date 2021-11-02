@@ -12,6 +12,7 @@ uint32_t assert_equals(uint32_t a, uint32_t b);
 int x[NUMELTS];
 
 void main() {
+  csr_tohost(0);
   x[0] = 0;
   x[1] = 1;
   int i;
