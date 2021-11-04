@@ -5,7 +5,7 @@ module echo_tb();
   reg clk, rst;
   parameter CPU_CLOCK_PERIOD = 20;
   parameter CPU_CLOCK_FREQ   = 1_000_000_000 / CPU_CLOCK_PERIOD;
-  localparam BAUD_RATE       = 115_200;
+  localparam BAUD_RATE       = 1_000_000;
   localparam BAUD_PERIOD     = 1_000_000_000 / BAUD_RATE; // 8680.55 ns
 
   localparam CHAR0     = 8'h61; // ~ 'a'
@@ -20,7 +20,9 @@ module echo_tb();
   wire serial_out;
 
   cpu # (
-    .CPU_CLOCK_FREQ(CPU_CLOCK_FREQ)
+    .CPU_CLOCK_FREQ(CPU_CLOCK_FREQ),
+    .RESET_PC(32'h1000_0000),
+    .BAUD_RATE(BAUD_RATE)
   ) CPU (
     .clk(clk),
     .rst(rst),
@@ -70,6 +72,7 @@ module echo_tb();
 
         $display("[time %t, sim. cycle %d] [Host (tb) --> FPGA_SERIAL_RX] Sent char 8'h%h",
                  $time, cycle, chars_from_host[c1]);
+        repeat (100) @(posedge clk); // Give time for the echo program to process each character
       end
     end
   endtask
