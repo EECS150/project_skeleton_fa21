@@ -5,7 +5,7 @@ module uart_parse_tb();
   reg clk, rst;
   parameter CPU_CLOCK_PERIOD = 20;
   parameter CPU_CLOCK_FREQ   = 1_000_000_000 / CPU_CLOCK_PERIOD;
-  localparam BAUD_RATE       = 115_200;
+  localparam BAUD_RATE       = 10_000_000;
   localparam BAUD_PERIOD     = 1_000_000_000 / BAUD_RATE; // 8680.55 ns
 
   localparam TIMEOUT_CYCLE = 100_000;
@@ -17,7 +17,8 @@ module uart_parse_tb();
   wire serial_out;
   cpu # (
     .CPU_CLOCK_FREQ(CPU_CLOCK_FREQ),
-    .RESET_PC(32'h1000_0000)
+    .RESET_PC(32'h1000_0000),
+    .BAUD_RATE(BAUD_RATE)
   ) CPU (
     .clk(clk),
     .rst(rst),
@@ -52,6 +53,7 @@ module uart_parse_tb();
 
       $display("[time %t, sim. cycle %d] [Host (tb) --> FPGA_SERIAL_RX] Sent char 8'h%h",
                $time, cycle, char_in);
+      repeat (200) @(posedge clk);
     end
   endtask
 
