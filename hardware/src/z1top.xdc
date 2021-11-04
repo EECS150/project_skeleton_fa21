@@ -37,5 +37,5 @@ set_property -dict {PACKAGE_PIN Y16 IOSTANDARD LVCMOS33 IOB TRUE} [get_ports FPG
 
 ##Audio Out
 
-set_property -dict { PACKAGE_PIN R18   IOSTANDARD LVCMOS33 IOB TRUE} [get_ports { aud_pwm }]; #IO_L20N_T3_34 Sch=aud_pwm
-set_property -dict { PACKAGE_PIN T17   IOSTANDARD LVCMOS33 } [get_ports { aud_sd }]; #IO_L20P_T3_34 Sch=aud_sd
+set_property -dict { PACKAGE_PIN R18   IOSTANDARD LVCMOS33 IOB TRUE} [get_ports { AUD_PWM }]; #IO_L20N_T3_34 Sch=aud_pwm
+set_property -dict { PACKAGE_PIN T17   IOSTANDARD LVCMOS33 } [get_ports { AUD_SD }]; #IO_L20P_T3_34 Sch=aud_sd
