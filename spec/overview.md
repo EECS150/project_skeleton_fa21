@@ -30,32 +30,40 @@ Here is a description of each checkpoint and how many weeks will be alloted to e
 - Push all of your IO-circuit Verilog modules that you have implemented in the labs to your assigned project Github repository in `hardware/src/io_circuits` (see [Integrate Designs From Labs](./checkpoint1.md#integrate-designs-from-labs)).
 - Commit your design documents (block diagram + writeup) to `docs`.
 
-### Checkpoint 1.5 (Decoder + ALU Implementation and Testbench)
+### Checkpoint 1.5 (Decoder/Control Unit + ALU Implementation and Testbench)
 - **Due:** November 12th, Friday (2 weeks)
+- Implement your ALU and decoder/control unit in Verilog and write a testbench for each one.
+  - Your ALU should implement all the arithmetic/logical operations supported by the RV32I ISA
+  - Your control unit should take in an instruction and emit the control signals used for the rest of your CPU (e.g. `RegWrEn`, `ALUOp`, `MemWrEn`, ...)
+    - You don't need to have a dedicated control unit module; it is OK to disperse the decoding of each control signal through your pipeline. If you do this, you don't need to write a unit test for your scattered boolean logic.
+- This checkpoint **doesn't** involve an in-person checkoff; just commit your Verilog files to your team repo by the deadline.
 
 ### Checkpoint 2 (Pipelined RISC-V CPU)
 - **Due:** November 19th, Friday (1 week)
-- Implement a fully functional RISC-V processor core in Verilog. Your processor core should be able to run the `mmult` demo successfully.
+- Implement a fully functional RISC-V processor core in Verilog. Your processor core should be able to run the `mmult` benchmark successfully.
 - See the [checkpoint 1/2 spec](./checkpoint1.md)
 
-### Checkpoint 3 (IO / Audio Circuit Integration)
+### Checkpoint 3 (IO Integration, Sigma-Delta DAC, Safe Clock Crossing, Audio Synth)
 - **Due:** December 3rd, Friday (2 weeks)
-- Integrate the FPGA board buttons/LEDs as CPU controllable IOs
-- Integrate the NCO and DAC as memory mapped devices
+- Integrate the FPGA board buttons/LEDs as CPU readable/controllable IOs
+- Build a simple sigma-delta DAC
+- Build a memory-mapped hardware-accelerated audio synth with 2 NCOs and a digital mixer
+  - Learn how to safely cross clock domains using a 4 way handshake
+- *251A only*: extend the audio synth with support for polyphony
+- See the [checkpoint 3 spec](./checkpoint3.md)
 
-### Checkpoint 4 (Audio Mixer)
+### Checkpoint 4 (Optimization)
 - **Due:** December 3rd, Friday (2 weeks) (final day of class)
-- Implement a memory-mapped hardware-accelerated audio mixer
-
-### Checkpoint 5 (Optimization)
-- **Due:** December 3rd, Friday (2 weeks) (final day of class)
+- See the [checkpoint 4 spec](./checkpoint4.md)
 
 ### Final Checkoff
 - Scheduled for **December 6th and 7th** (Monday and Tuesday, RRR week)
 - Demonstration of your project and final check for functionality
+- See the [final checkoff spec](./final_checkoff.md)
 
 ### Final Report
 - **Due:** December 8th, Wednesday (RRR week)
+- See the [final report spec](./final_report.md)
 
 ## General Project Tips
 Document your project as you go.

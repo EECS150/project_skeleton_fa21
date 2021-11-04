@@ -73,7 +73,7 @@ To build a bitstream run `make impl` in `hardware`.
 The table below contains all of the instructions your processor is responsible for supporting.
 
 <p align=center>
-  <a href="./isa.pdf"><img width=500 src="./isa.png"/></a>
+  <a href="./figs/isa.pdf"><img width=500 src="./figs/isa.png"/></a>
 </p>
 <p align=center>
   <em>RISC-V RV32I + CSR ISA to implement in your processor</em>
