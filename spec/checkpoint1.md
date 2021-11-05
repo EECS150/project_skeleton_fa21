@@ -339,7 +339,7 @@ cd software/riscv-isa-tests && make
 
 To run the tests run:
 ```shell
-cd hardware/sim
+cd hardware
 make isa-tests  # to run all ISA tests
 make sim/isa/lw.fst  # to run a specific test
 grep -r -i "failed" sim/isa/*.log  # to check for failures
@@ -432,6 +432,7 @@ In some sense, it is similar to the echo test in Lab 5, however, the UART module
 Once you pass the echo test, also try `sim/uart_parse_tb.v`.
 This test combines both UART operations and string comparison.
 It covers the basic functionality of the BIOS program, but is shorter and easier to debug than the BIOS testbench.
+Make sure to compile the `.hex` file in the `software` directory first.
 
 ## BIOS and Programming your CPU
 We have provided a BIOS program in `software/bios` that allows you to interact with your CPU and download other programs over UART.
