@@ -129,6 +129,7 @@ module cpu_tb();
         current_output = `RF_PATH.mem[rf_wa];
         @(posedge clk);
       end
+      cycle = 0;
       done = 1;
       $display("[%d] Test %s passed!", current_test_id, test_type);
     end
@@ -150,6 +151,7 @@ module cpu_tb();
         current_output = `DMEM_PATH.mem[addr];
         @(posedge clk);
       end
+      cycle = 0;
       done = 1;
       $display("[%d] Test %s passed!", current_test_id, test_type);
     end
