@@ -62,11 +62,27 @@ Here is a description of each checkpoint and how many weeks will be alloted to e
 ### Final Checkoff
 - Scheduled for **December 6th and 7th** (Monday and Tuesday, RRR week)
 - Demonstration of your project and final check for functionality
-- See the [final checkoff spec](./final_checkoff.md). It contains the full rubric for project grading.
+- See the [final checkoff spec](./final_checkoff.md)
 
 ### Final Report
 - **Due:** December 8th, Wednesday (RRR week)
 - See the [final report spec](./final_report.md)
+
+### Grading Rubric
+- Functionality (80%) at the final project checkoff.
+    - 10% from the `cpu_tb`, `asm_tb` (and your custom assembly tests), and the `isa-tests`.
+    - 20% from the `c-tests`, `echo_tb`, and `bios_tb`.
+    - 30% from the `bios` on the FPGA.
+    - 20% from `mmult` on the FPGA.
+    - 10% from the `user_io_test` on the FPGA.
+    - 10% from `piano` on the FPGA.
+- Optimization (10%) from the final report submission.
+    - This score is contingent on implementing all the required functionality. An incomplete project will receive a zero in this category.
+    - If you get your processor running at 100 MHz you will get full credit for optimization
+    - If you instead evaluate different optimizations by recording the CPI / frequency / critical path for each trial, you will get full credit with 3 such evaluations
+- Final report and style (10%) demonstrated throughout the project.
+    - A final report that is well written and hits all the points in the [final report spec](./final_report.md) will get full credit.
+    - Style relates to the cleanliness and clarity of your Verilog code. Your Verilog code should be readable. Your git repo should have no build artifacts and junk committed to it.
 
 ## General Project Tips
 Document your project as you go.
