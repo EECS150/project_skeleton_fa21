@@ -83,6 +83,9 @@ Here is a description of each checkpoint and how many weeks will be alloted to e
 - Final report and style (10%) demonstrated throughout the project.
     - A final report that is well written and hits all the points in the [final report spec](./final_report.md) will get full credit.
     - Style relates to the cleanliness and clarity of your Verilog code. Your Verilog code should be readable. Your git repo should have no build artifacts and junk committed to it.
+- Extra credit (up to 10%)
+    - Credit based on additional functionality will be qualified on a case by case basis. Students interested in expanding the functionality of their project must meet with a GSI well ahead of time to be qualified for extra credit.
+    - Point value will be decided by the course staff on a case by case basis, and will depend on the complexity of your proposal, the creativity of your idea, and relevance to the material taught.
 
 ## General Project Tips
 Document your project as you go.
