@@ -54,6 +54,7 @@ Here is a description of each checkpoint and how many weeks will be alloted to e
 
 ### Checkpoint 4 (Optimization)
 - **Due:** December 3rd, Friday (2 weeks) (final day of class)
+- Attempt to maximize the performance of your CPU by co-optimizing the CPI the clock frequency
 - See the [checkpoint 4 spec](./checkpoint4.md)
 
 ### Final Checkoff

@@ -437,7 +437,7 @@ Make sure to compile the `.hex` file in the `software` directory first.
 ## BIOS and Programming your CPU
 We have provided a BIOS program in `software/bios` that allows you to interact with your CPU and download other programs over UART.
 The BIOS program is an infinite loop that reads from the UART, checks if the input string matches a known control sequence, and then performs an associated action.
-For detailed information on the BIOS, see **TODO: BIOS appendix**
+For detailed information on the BIOS, see the [BIOS details document](./bios.md).
 
 ### Compiling the BIOS
 Verify that the stack pointer and .text segment offset are set properly in `start.s` and `bios.ld` in `software/bios` directory.
