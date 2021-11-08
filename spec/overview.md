@@ -45,6 +45,7 @@ Here is a description of each checkpoint and how many weeks will be alloted to e
 
 ### Checkpoint 3 (IO Integration, Sigma-Delta DAC, Safe Clock Crossing, Audio Synth)
 - **Due:** December 3rd, Friday (2 weeks)
+  - This checkpoint will be graded during the final checkoff
 - Integrate the FPGA board buttons/LEDs as CPU readable/controllable IOs
 - Build a simple sigma-delta DAC
 - Build a memory-mapped hardware-accelerated audio synth with 2 NCOs and a digital mixer
@@ -54,6 +55,7 @@ Here is a description of each checkpoint and how many weeks will be alloted to e
 
 ### Checkpoint 4 (Optimization)
 - **Due:** December 3rd, Friday (2 weeks) (final day of class)
+  - This checkpoint will be graded during the final checkoff
 - Attempt to maximize the performance of your CPU by co-optimizing the CPI the clock frequency
 - See the [checkpoint 4 spec](./checkpoint4.md)
 
@@ -71,9 +73,20 @@ Document your project as you go.
 You should comment your Verilog and keep your diagrams up to date.
 Aside from the final project report (you will need to turn in a report documenting your project), you can use your design documents to help the debugging process.
 
+### Extra Credit
 Finish the required features first.
 Attempt extra features after everything works well.
 **If your submitted project does not work by the final deadline, you will not get any credit for any extra credit features you have implemented.**
+
+Teams that have completed the base set of requirements are eligible to receive extra credit worth up to 10% of the project grade by adding extra functionality and demonstrating it at the time of the final checkoff.
+The following are suggested projects that may or may not be feasible in one week.
+
+- Branch Predictor: Implement a two bit (or more complicated) branch predictor with a branch history table (BHT) to replace the naive 'always taken' predictor used in the project
+- 5-Stage Pipeline: Add more pipeline stages and push the clock frequency past 100MHz
+- Audio Recording: Capture mic input from the Pynq's microphone and wire it to the CPU via MMIO
+- RISC-V M Extension: Extend the processor with a hardware multiplier and divider and verify its functionality by modifying `mmult` and your own set of assembly tests
+
+When the time is right, if you are interested in implementing any of these, see the staff for more details.
 
 ### Local Development
 You can build and run everything for this project from your laptop.
