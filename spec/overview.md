@@ -3,7 +3,7 @@
 ## Introduction
 The goal of this project is to familiarize EECS151/251A students with the methods and tools of digital design.
 Working in a team of two, you will design and implement a 3-stage pipelined RISC-V CPU with a UART for tethering.
-You will then integrate the audio and IO components from the labs and build a small beat detection accelerator.
+You will then integrate the audio and IO components from the labs and build a simple audio synth.
 <!-- Afterwards, you will build a hardware accelerator to accelerate a small Convolutional Neural Network and do a system integration with your RISC-V CPU. -->
 
 Finally, you will optimize your CPU for performance (maximizing the Iron Law) and cost (FPGA resource utilization).
@@ -60,7 +60,7 @@ Here is a description of each checkpoint and how many weeks will be alloted to e
 ### Final Checkoff
 - Scheduled for **December 6th and 7th** (Monday and Tuesday, RRR week)
 - Demonstration of your project and final check for functionality
-- See the [final checkoff spec](./final_checkoff.md)
+- See the [final checkoff spec](./final_checkoff.md). It contains the full rubric for project grading.
 
 ### Final Report
 - **Due:** December 8th, Wednesday (RRR week)
