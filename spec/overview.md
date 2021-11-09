@@ -42,6 +42,11 @@ Here is a description of each checkpoint and how many weeks will be alloted to e
 - **Due:** November 19th, Friday (1 week)
 - Implement a fully functional RISC-V processor core in Verilog. Your processor core should be able to run the `mmult` benchmark successfully.
 - See the [checkpoint 1/2 spec](./checkpoint1.md)
+- You have to get this checkpoint checked off with an FPGA TA either in lab or office hours; demonstrate the following in person:
+    - Functionality of the BIOS (`sw` and `lw, lhu, lbu`)
+    - Loading `mmult` using `hex_to_serial` into the IMEM/DMEM
+    - Jumping to `mmult` from the BIOS, successful execution of `mmult` with the correct checksum, and jump back to BIOS
+    - The measured CPI should be less than 1.2
 
 ### Checkpoint 3 (IO Integration, Sigma-Delta DAC, Safe Clock Crossing, Audio Synth)
 - **Due:** December 3rd, Friday (2 weeks)
