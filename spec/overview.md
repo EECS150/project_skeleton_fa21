@@ -89,8 +89,9 @@ Here is a description of each checkpoint and how many weeks will be alloted to e
     - A final report that is well written and hits all the points in the [final report spec](./final_report.md) will get full credit.
     - Style relates to the cleanliness and clarity of your Verilog code. Your Verilog code should be readable. Your git repo should have no build artifacts and junk committed to it.
 - Checkpoints (5%)
-    - 50% from the block diagram checkoff on the checkpoint 1 deadline (10/29/21)
-    - 50% from the demonstrated functionality on the checkpoint 2 deadline (11/19/21)
+    - 45% from the block diagram checkoff on the checkpoint 1 deadline (10/29/21)
+    - 10% from the ALU and control unit/decoder RTL + testbenches on the checkpoint 1.5 deadline (11/12/21)
+    - 45% from the demonstrated functionality on the checkpoint 2 deadline (11/19/21)
     - 5% penalty per day (only counting weekdays/non-holiday days) for each day the checkpoint is checked off late
 - Extra credit (up to 10%)
     - Credit based on additional functionality will be qualified on a case by case basis. Students interested in expanding the functionality of their project must meet with a GSI well ahead of time to be qualified for extra credit.
