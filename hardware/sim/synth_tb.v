@@ -66,7 +66,7 @@ module synth_tb();
                     sample_ready = 0;
                 end
             end
-            // Thread to check sample values for CARRIER_FCW = 440, MOD_FCW = 800, MOD_SHIFT = 8
+            // Thread to check sample values for carrier freq 440 Hz, modulator freq 800 Hz, and MOD_SHIFT = 8
             begin
                 @(num_samples_fetched == 1);
                 assert(sample == 14'b00000000011001) else $error("Synth output after 1 sample does not match");
