@@ -13,7 +13,8 @@ module z1top #(
     parameter integer B_PULSE_CNT_MAX = 0.100 / 0.0005,
     /* lint_on */
     // The PC the RISC-V CPU should start at after reset
-    parameter RESET_PC = 32'h4000_0000
+    parameter RESET_PC = 32'h4000_0000,
+    parameter N_VOICES = 1
 ) (
     input CLK_125MHZ_FPGA,
     input [3:0] BUTTONS,
@@ -92,5 +93,55 @@ module z1top #(
         .rst(cpu_reset),
         .serial_out(cpu_tx),
         .serial_in(cpu_rx)
+    );
+
+    cpu_to_synth_cdc #(
+        .N_VOICES(N_VOICES)
+    ) cdc (
+        .cpu_clk(cpu_clk),
+        .synth_clk(pwm_clk),
+        .cpu_carrier_fcws(),
+        .cpu_mod_fcw(),
+        .cpu_mod_shift(),
+        .cpu_note_en(),
+        .cpu_synth_shift(),
+        .cpu_req(),
+        .cpu_ack(),
+
+        .synth_carrier_fcws(),
+        .synth_mod_fcw(),
+        .synth_mod_shift(),
+        .synth_note_en(),
+        .synth_synth_shift()
+    );
+
+    synth #(
+        .N_VOICES(N_VOICES)
+    ) synth (
+        .clk(pwm_clk),
+        .rst(pwm_rst),
+        .carrier_fcws(),
+        .mod_fcw(),
+        .mod_shift(),
+        .note_en(),
+        .sample(),
+        .sample_valid(),
+        .sample_ready()
+    );
+
+    scaler scaler (
+        .clk(pwm_clk),
+        .synth_shift(),
+        .synth_out(),
+        .code()
+    );
+
+    sampler sampler (
+        .clk(pwm_clk),
+        .rst(pwm_rst),
+        .synth_valid(),
+        .synth_ready(),
+        .scaled_synth_code(),
+        .pwm_out(pwm_out)
     );
 endmodule
