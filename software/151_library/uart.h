@@ -15,4 +15,6 @@ void uwrite_int8s(const int8_t* s);
 
 int8_t uread_int8(void);
 
+int8_t uread_int8_noecho(void);
+
 #endif

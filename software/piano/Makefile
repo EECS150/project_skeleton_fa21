@@ -1,5 +1,5 @@
 # Master Makefile dependencies
-TARGET := user_io_test
+TARGET := piano
 INCLUDE_LIB := true
 GCC_OPTS += -O2 -flto
 
