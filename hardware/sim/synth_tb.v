@@ -68,7 +68,6 @@ module synth_tb();
             end
             // Thread to check sample values for CARRIER_FCW = 440, MOD_FCW = 800, MOD_SHIFT = 8
             begin
-                assert(sample == 14'b00000000000000) else $error("Synth output on reset does not match");
                 @(num_samples_fetched == 1);
                 assert(sample == 14'b00000000011001) else $error("Synth output after 1 sample does not match");
                 @(num_samples_fetched == 2);
