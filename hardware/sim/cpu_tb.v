@@ -473,45 +473,45 @@ module cpu_tb();
     JUMP_ADDR = (32'h1000_0000 + IMM[12:0]) >> 2;
 
     BR_TYPE[0]     = `FNC_BEQ;
-    BR_NAME_TK1[0] = "U-Type BEQ Taken 1";
-    BR_NAME_TK2[0] = "U-Type BEQ Taken 2";
-    BR_NAME_NTK[0] = "U-Type BEQ Not Taken";
+    BR_NAME_TK1[0] = "B-Type BEQ Taken 1";
+    BR_NAME_TK2[0] = "B-Type BEQ Taken 2";
+    BR_NAME_NTK[0] = "B-Type BEQ Not Taken";
 
     BR_TAKEN_OP1[0]  = 100; BR_TAKEN_OP2[0]  = 100;
     BR_NTAKEN_OP1[0] = 100; BR_NTAKEN_OP2[0] = 200;
 
     BR_TYPE[1]       = `FNC_BNE;
-    BR_NAME_TK1[1]   = "U-Type BNE Taken 1";
-    BR_NAME_TK2[1]   = "U-Type BNE Taken 2";
-    BR_NAME_NTK[1]   = "U-Type BNE Not Taken";
+    BR_NAME_TK1[1]   = "B-Type BNE Taken 1";
+    BR_NAME_TK2[1]   = "B-Type BNE Taken 2";
+    BR_NAME_NTK[1]   = "B-Type BNE Not Taken";
     BR_TAKEN_OP1[1]  = 100; BR_TAKEN_OP2[1]  = 200;
     BR_NTAKEN_OP1[1] = 100; BR_NTAKEN_OP2[1] = 100;
 
     BR_TYPE[2]       = `FNC_BLT;
-    BR_NAME_TK1[2]   = "U-Type BLT Taken 1";
-    BR_NAME_TK2[2]   = "U-Type BLT Taken 2";
-    BR_NAME_NTK[2]   = "U-Type BLT Not Taken";
+    BR_NAME_TK1[2]   = "B-Type BLT Taken 1";
+    BR_NAME_TK2[2]   = "B-Type BLT Taken 2";
+    BR_NAME_NTK[2]   = "B-Type BLT Not Taken";
     BR_TAKEN_OP1[2]  = 100; BR_TAKEN_OP2[2]  = 200;
     BR_NTAKEN_OP1[2] = 200; BR_NTAKEN_OP2[2] = 100;
 
     BR_TYPE[3]       = `FNC_BGE;
-    BR_NAME_TK1[3]   = "U-Type BGE Taken 1";
-    BR_NAME_TK2[3]   = "U-Type BGE Taken 2";
-    BR_NAME_NTK[3]   = "U-Type BGE Not Taken";
+    BR_NAME_TK1[3]   = "B-Type BGE Taken 1";
+    BR_NAME_TK2[3]   = "B-Type BGE Taken 2";
+    BR_NAME_NTK[3]   = "B-Type BGE Not Taken";
     BR_TAKEN_OP1[3]  = 300; BR_TAKEN_OP2[3]  = 200;
     BR_NTAKEN_OP1[3] = 100; BR_NTAKEN_OP2[3] = 200;
 
     BR_TYPE[4]       = `FNC_BLTU;
-    BR_NAME_TK1[4]   = "U-Type BLTU Taken 1";
-    BR_NAME_TK2[4]   = "U-Type BLTU Taken 2";
-    BR_NAME_NTK[4]   = "U-Type BLTU Not Taken";
+    BR_NAME_TK1[4]   = "B-Type BLTU Taken 1";
+    BR_NAME_TK2[4]   = "B-Type BLTU Taken 2";
+    BR_NAME_NTK[4]   = "B-Type BLTU Not Taken";
     BR_TAKEN_OP1[4]  = 32'h0000_0001; BR_TAKEN_OP2[4]  = 32'hFFFF_0000;
     BR_NTAKEN_OP1[4] = 32'hFFFF_0000; BR_NTAKEN_OP2[4] = 32'h0000_0001;
 
     BR_TYPE[5]       = `FNC_BGEU;
-    BR_NAME_TK1[5]   = "U-Type BGEU Taken 1";
-    BR_NAME_TK2[5]   = "U-Type BGEU Taken 2";
-    BR_NAME_NTK[5]   = "U-Type BGEU Not Taken";
+    BR_NAME_TK1[5]   = "B-Type BGEU Taken 1";
+    BR_NAME_TK2[5]   = "B-Type BGEU Taken 2";
+    BR_NAME_NTK[5]   = "B-Type BGEU Not Taken";
     BR_TAKEN_OP1[5]  = 32'hFFFF_0000; BR_TAKEN_OP2[5]  = 32'h0000_0001;
     BR_NTAKEN_OP1[5] = 32'h0000_0001; BR_NTAKEN_OP2[5] = 32'hFFFF_0000;
 
