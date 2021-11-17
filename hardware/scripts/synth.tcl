@@ -2,7 +2,7 @@ source ../target.tcl
 
 # Read Verilog source files
 if {[string trim ${RTL}] ne ""} {
-  read_verilog -v ${RTL}
+  read_verilog -sv ${RTL}
 }
 
 # Read user constraints
