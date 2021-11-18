@@ -4,6 +4,11 @@ module scaler (
     input [13:0] synth_out, // 2s complement signed number
     output [9:0] code // unsigned number
 );
-    // Remove this line once you have implemented this module
-    assign code = 0;
+    wire [13:0] synth_out_shifted;
+    assign synth_out_shifted = synth_out << synth_shift;
+    wire [10:0] synth_out_sign_ext;
+    assign synth_out_sign_ext = {synth_out_shifted[13], synth_out_shifted[13:4]};
+    wire [10:0] synth_out_balanced;
+    assign synth_out_balanced = synth_out_sign_ext + 11'd512;
+    assign code = synth_out_balanced[9:0];
 endmodule
