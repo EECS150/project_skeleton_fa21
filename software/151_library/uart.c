@@ -21,3 +21,9 @@ int8_t uread_int8(void) {
     }
     return ch;
 }
+
+int8_t uread_int8_noecho(void) {
+    while (!URECV_CTRL) ;
+    int8_t ch = URECV_DATA;
+    return ch;
+}
