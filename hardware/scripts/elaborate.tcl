@@ -1,4 +1,4 @@
-source ./target.tcl
+source ../target.tcl
 
 # Read Verilog source files
 if {[string trim ${RTL}] ne ""} {
