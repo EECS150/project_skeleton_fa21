@@ -9,7 +9,7 @@ In checkpoint 3, we will add another block that augments our CPU, this time an a
 
 ## Checkpoint 3 Overview
 <p align=center>
-  <img height=250 src="./figs/audio.png"/>
+  <img height=300 src="./figs/audio.png"/>
 </p>
 
 - Digital Synthesizer
@@ -138,6 +138,9 @@ There are three sources of inaccuracy when using an NCO:
 -->
 
 ## FM Synthesizer
+<p align=center>
+  <img width=70% src="./figs/synth.png"/>
+</p>
 In lab, we hooked up one NCO directly to the DAC, enabling us to play sine waves through the headphone jack.
 In the project, we want to try a more interesting synthesis technique where we use one NCO to modulate the `fcw` of another.
 This is frequency modulation synthesis.
@@ -241,7 +244,7 @@ Clock domain crossing requires the generation of two new synchronous signals, re
 Implement this with 2-flop synchronizers that synchronize the request and acknowledge signals between the clock domains.
 A block diagram is shown below:
 <p align=center>
-  <img width=50% src="./figs/fourPhase_1.png"/>
+  <img width=50% src="./figs/cdc.png"/>
 </p>
 
 The numbers highlight the flow of data through the synchronizer circuit.
