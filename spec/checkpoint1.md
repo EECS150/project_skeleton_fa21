@@ -193,7 +193,7 @@ The BIOS program should be able to read from the BIOS memory (to fetch static da
 This allows the BIOS program to receive user programs over the UART from the host PC and load them into instruction memory.
 
 You can then instruct the BIOS program to jump to an instruction memory address, which begins execution of the program that you loaded.
-At any time, you can press the reset button on the board to return your processor to the BIOS program.
+At any time, you can press the reset button on the board (button 0, as before) to return your processor to the BIOS program.
 
 ### Unaligned Memory Accesses
 In the official RISC-V specification, unaligned loads and stores are supported.
