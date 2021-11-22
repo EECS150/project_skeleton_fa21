@@ -4,7 +4,7 @@ To buffer user inputs to your processor, you will integrate the FIFO you built i
 
 In lab 5, we built an UART.
 With some simple logic blocks (in `z1top.v`), a character from the host was transformed from lower case to upper case and echoed back.
-In project checkpoint 2, we achieved similar functionality using the the CPU to process the character, interfacing with the UART MMIO
+In project checkpoint 2, we achieved similar functionality using the the CPU to process the character, interfacing with the UART MMIO. 
 In checkpoint 3, we will add another block that augments our CPU, this time an accelerator for audio synthesis.
 
 ## Checkpoint 3 Overview
