@@ -65,12 +65,12 @@ Here is a description of each checkpoint and how many weeks will be alloted to e
 - See the [checkpoint 4 spec](./checkpoint4.md)
 
 ### Final Checkoff
-- Scheduled for **December 6th and 7th** (Monday and Tuesday, RRR week)
+- Scheduled for **December 7th, Tuesday** (RRR week)
 - Demonstration of your project and final check for functionality
 - See the [final checkoff spec](./final_checkoff.md)
 
 ### Final Report
-- **Due:** December 8th, Wednesday (RRR week)
+- **Due:** December 9th, Thursday (RRR week)
 - See the [final report spec](./final_report.md)
 
 ### Grading Rubric
