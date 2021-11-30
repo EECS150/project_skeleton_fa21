@@ -12,7 +12,7 @@ You may consider the report to be your medal for surviving EECS151/251A.
 
 ## Report Details
 You will turn in your project report on Gradescope by the date specified in the [project overview](./overview.md).
-The report should be around 8 pages total with around 5 pages of text and 3 pages of figures (± a few pages on each).
+The report should be around 6 pages total with around 2-3 pages of text and 2-3 pages of figures (± a few pages on each).
 Ideally you should mix the text and figures together.
 
 Here is a suggested outline and page breakdown for your report.
@@ -20,14 +20,14 @@ You do not need to strictly follow this outline, it is here just to give you an 
 
 - **Project Functional Description and Design Requirements** (~0.5 page)
   - Describe the design objectives of your project. You don't need to go into details about the RISC-V ISA, but you need to describe the high-level design parameters (pipeline structure, memory hierarchy, etc.) for this particular CPU.
-- **High-level organization** (~1 page)
+- **High-level organization** (~0.5 page)
   - How is your project broken down into pieces? (block diagram level-description)
   - We are most interested in how you broke the CPU datapath and control down into submodules, since the code for the later checkpoints will be pretty consistent across all groups. Please include an updated block diagram.
-- **Detailed Description of Submodules** (~2 pages)
+- **Detailed Description of Submodules** (~1-2 pages)
   - Describe how your circuits work. Concentrate here on novel or non-standard circuits.
   - Also, focus your attention on the parts of the design that were not supplied to you by the teaching staff. For instance, describe the details of your FIFOs, audio synthesizer, and any extra credit work.
   - Describe the behavior of your pipeline stages; what work is done in what stage? How do you handle data and control hazards? What forwarding paths did you implement?
-- **Verification** (~1 page)
+- **Verification** (~0.5 page)
   - How did you test your CPU? Did you write any Verilog testbenches, assembly tests, or C tests to exercise any microarchitectural features or hazards? What provided tests did you use?
   - What bugs did you catch during verification and how did you fix them?
 - **Status and Results** (~1-2 pages)
