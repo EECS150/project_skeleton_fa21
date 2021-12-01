@@ -41,8 +41,8 @@ module synth_tb();
     integer num_samples_fetched = 0;
     initial begin
         `ifdef IVERILOG
-            $dumpfile("nco_tb.fst");
-            $dumpvars(0, nco_tb);
+            $dumpfile("synth_tb.fst");
+            $dumpvars(0, synth_tb);
         `endif
         `ifndef IVERILOG
             $vcdpluson;
