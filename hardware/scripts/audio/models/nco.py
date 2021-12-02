@@ -1,5 +1,5 @@
 # Requires: pip install spfpm
-from typing import List
+from typing import List, Optional
 from dataclasses import dataclass
 
 from FixedPoint import FXnum
@@ -47,7 +47,7 @@ class NCO:
     def lsb_bits_of_pa(self) -> int:
         return self.pa & int('1' * (self.pa_bits - self.lut_addr_bits), 2)  # take LSB (N-M) bits of phase_acc
 
-    def next_sample(self, fcw: int) -> List[FXnum]:
+    def next_sample(self, fcw: Optional[int]) -> List[FXnum]:
         # take MSB lut_addr_bits bits of the PA to index the LUTs
         lut_index = self.msb_bits_of_pa()
         samples = []
@@ -63,6 +63,7 @@ class NCO:
                 diff = samp2 - samp1
                 samples.append(samp1 + residual*diff)
 
-        self.pa = self.pa + fcw
+        if fcw:
+            self.pa = self.pa + fcw
         self.pa = self.pa % self.max_pa_value  # overflow on N bits
         return samples

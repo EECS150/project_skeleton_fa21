@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import argparse
 import math
+import sys
 
 from FixedPoint import FXfamily
 # import matplotlib.pyplot as plt
@@ -32,6 +33,7 @@ if __name__ == "__main__":
     synth.modulator_fcw = modulator_ncos[0].freq_to_fcw(800)
     synth.modulator_idx_shift = 8
     synth.note_enabled[0] = True
+    print("Carrier FCW: {}, Modulator FCW: {}".format(synth.fcws[0], synth.modulator_fcw), file=sys.stderr)
 
     # synth.fcws[1] = carrier_ncos[1].freq_to_fcw(880)
     # synth.note_enabled[1] = True

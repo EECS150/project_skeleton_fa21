@@ -24,7 +24,10 @@ class Synth:
         self.note_enabled = [False] * len(self.carrier_ncos)
 
     def next_sample(self) -> FXnum:
-        modulator_samples = [nco.next_sample(self.modulator_fcw)[0] if (en and self.modulator_fcw != 0) else nco.zero for nco, en in zip(self.modulator_ncos, self.note_enabled)]
+        modulator_samples = [nco.next_sample(self.modulator_fcw if en else None)[0] for nco, en in zip(self.modulator_ncos, self.note_enabled)]
+        # print("Mod Sample:", modulator_samples[0].scaledval)
         freq_modulated_fcws = [fcw + (mod_samp.scaledval << self.modulator_idx_shift) for fcw, mod_samp in zip(self.fcws, modulator_samples)]
-        carrier_samples = [nco.next_sample(freq_modulated_fcws[idx])[0] if en else nco.zero for (idx, nco), en in zip(enumerate(self.carrier_ncos), self.note_enabled)]
+        # print("Modulated FCWs:", freq_modulated_fcws)
+        carrier_samples = [nco.next_sample(fcw if en else None)[0] for nco, fcw, en in zip(self.carrier_ncos, freq_modulated_fcws, self.note_enabled)]
+        # print("Carrier Sample:", carrier_samples[0].scaledval)
         return sum(carrier_samples)
