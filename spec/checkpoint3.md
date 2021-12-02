@@ -316,9 +316,12 @@ See the diagram at the top of the spec for connection details.
 ## Top-Level Testing
 We've provided a top-level testbench that integrates both the `synth` inside `z1top` and the `piano` software.
 See `sim/synth_top_tb.v`.
+You will have to compile the software in `software/piano`.
 
 To run the test, you may have to change some hierarchical paths to match those in your design.
 You may also want to look at `software/piano` to see how the off-chip UART is being used to send commands to the `piano` program running on the CPU.
+
+*251A*: You can uncomment the part in `synth_top_tb.v` where a second note is sent, and bump up `N_VOICES` in `software/piano/piano.c` to simulate polyphony.
 
 ## FPGA Testing
 Program the FPGA, `hex_to_serial` `software/piano` and `jal` to the piano program.

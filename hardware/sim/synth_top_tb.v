@@ -112,10 +112,10 @@ module synth_top_tb();
         assert(top.synth_mod_shift == 'd8);
 
         // Set the synth shift
-        host_to_fpga(8'd5);
-        host_to_fpga(8'd2);
-        repeat (100) @(posedge clk);
-        assert(top.synth_synth_shift == 'd2);
+        // host_to_fpga(8'd5);
+        // host_to_fpga(8'd2);
+        // repeat (100) @(posedge clk);
+        // assert(top.synth_synth_shift == 'd2);
 
         // Set the modulator FCW (4000 Hz)
         fcw = 24'd1118481;
@@ -133,20 +133,18 @@ module synth_top_tb();
         host_to_fpga(fcw[15:8]);
         host_to_fpga(fcw[23:16]);
         repeat (100) @(posedge clk);
-        $display(top.synth_carrier_fcws[0]);
-        $display(fcw);
         assert(top.synth_carrier_fcws[0] == fcw);
         assert(top.synth_note_en[0] == 1'b1);
 
         // Start playing a second note
-        fcw = 24'd1006202;
-        host_to_fpga(8'd3);
-        host_to_fpga(fcw[7:0]);
-        host_to_fpga(fcw[15:8]);
-        host_to_fpga(fcw[23:16]);
-        repeat (100) @(posedge clk);
-        assert(top.synth_carrier_fcws[1] == fcw);
-        assert(top.synth_note_en[1] == 1'b1);
+        // fcw = 24'd1006202;
+        // host_to_fpga(8'd3);
+        // host_to_fpga(fcw[7:0]);
+        // host_to_fpga(fcw[15:8]);
+        // host_to_fpga(fcw[23:16]);
+        // repeat (100) @(posedge clk);
+        // assert(top.synth_carrier_fcws[1] == fcw);
+        // assert(top.synth_note_en[1] == 1'b1);
 
         repeat (5000) @(posedge clk);
 
