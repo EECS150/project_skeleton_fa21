@@ -52,6 +52,24 @@ The CPU should be able to read the empty signal of the FIFO, and it should be ab
 Modify `z1top.v` and `cpu.v` by instantiating your FIFO, hooking it up with signals from the `button_parser`, and connecting your FIFO's read interface to the RISC-V core.
 Route the `SWITCHES` input and `LEDS` output into your CPU as you please.
 
+### Testing
+You can edit the `asm_tb` to verify proper functionality of your GPIO FIFO.
+For example, you can add a snippet to `asm/start.s` that polls `empty` (0x8000_0020) and when `empty` becomes 0, reads the button by loading from the `read_data` (0x8000_0024) address, and then sets the flag register.
+In `asm_tb.v`, you can simulate a button press, wait for the flag register to be set, and then verify that the correct button data was read into a register.
+
+Here's how you might write the assembly to do this:
+```asm
+loop:
+li x1, 0x80000020
+lw x1, 0(x1)
+andi x1, 1
+bnez x1, loop
+lw x2, 4(x1)
+li x20, 100
+```
+
+Then verify that x2 contains the button press that you simulated in `asm_tb.v`.
+
 ### User I/O Test Program
 The `software/user_io_test` tests the FIFO and user I/O integration.
 
