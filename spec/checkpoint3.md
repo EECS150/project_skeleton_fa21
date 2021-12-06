@@ -133,7 +133,7 @@ However, for the project, a `sine_lut.v` (ROM) is generated in `hardware/src/aud
 You should instantiate the `sine_lut` in your NCO and use your lab solution to write the NCO implementation.
 
 ```sh
-./scripts/audio/generate_sine_lut > ./hardware/src/audio/sine_lut.v
+./scripts/audio/generate_sine_lut > ./src/audio/sine_lut.v
 ```
 
 ### Testing
