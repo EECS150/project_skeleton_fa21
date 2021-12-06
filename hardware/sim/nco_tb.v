@@ -17,7 +17,7 @@ module nco_tb();
         .rst(rst),
         .fcw(fcw),
         .next_sample(next_sample),
-        .sample(code)
+        .code(code)
     );
 
     integer code_file;

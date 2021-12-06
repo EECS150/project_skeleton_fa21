@@ -57,6 +57,7 @@ module synth_tb();
         fork
             // Thread to pull samples from the synth
             begin
+                @(posedge clk); #1;
                 repeat (NUM_SAMPLES) begin
                     while (!sample_valid) @(posedge clk); #1;
                     sample_ready = 1;

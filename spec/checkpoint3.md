@@ -325,7 +325,7 @@ You may also want to look at `software/piano` to see how the off-chip UART is be
 
 ## FPGA Testing
 Program the FPGA, `hex_to_serial` `software/piano` and `jal` to the piano program.
-Exit screen, and run `./hardware/scripts/piano`.
+Exit screen, and run `./hardware/scripts/audio/piano`.
 
 This will open a GUI that allows you to play notes by pressing keys on your keyboard (similar to the lab) and allow you to change the modulator FCW and shift.
 Try holding down a key and sliding the modulator FCW to see how the note's timbre changes.
