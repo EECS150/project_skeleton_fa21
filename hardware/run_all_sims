@@ -14,7 +14,7 @@ def run_bench(
     """Runs a particular testbench
 
     'name': used in the command `make {name}`
-    'cleanup': function to delete previous testbench output
+    'cleanup': function to delete testbench output of the previous run
     'success_cond': takes in the stdout of running a testbench
                     returns whether the run was successful
     """
