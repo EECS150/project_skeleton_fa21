@@ -35,7 +35,7 @@ You do not need to strictly follow this outline, it is here just to give you an 
   - At what frequency (50MHz or greater) does your design run? Do certain checkpoints work at a higher clock speed while others only run at 50 MHz?
   - Provide the **number of LUTs, SLICE registers, BRAMs, and DSP blocks** used by your design (from the utilization report in `build/impl/post_place_utilization.rpt`).
   - Optimization
-    - If you have hit 100 MHz, provide the critical path and the CPI/max frequency when running `mmult`.
+    - If you have hit 100 MHz, provide the critical path and the CPI/max frequency when running `mmult`. Describe the optimizations you made to get there.
     - If you are evaluating multiple optimizations instead, provide the max frequency after each optimization you implemented, the `mmult` CPI, and the critical path.
       - What was the best design point for performance?
   - This section is particularly important for non-working designs (to help us assign partial credit).
