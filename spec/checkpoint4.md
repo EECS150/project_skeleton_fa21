@@ -8,7 +8,6 @@ The optimization goal for this project is to minimize the **execution time** of 
 <p align=center>
   <img src="https://render.githubusercontent.com/render/math?math=\frac{\text{Time}}{\text{Program}} = \frac{\text{Instructions}}{\text{Program}} \times \frac{\text{Cycles}}{\text{Instruction}} \times \frac{\text{Time}}{\text{Cycle}}" />
 </p>
-
 The number of instructions is fixed, but you have freedom to change the CPI and the CPU clock frequency.
 Often you will find that you will have to sacrifice CPI to achieve a higher clock frequency, but there also will exist opportunities to improve one or both of the variables without compromises.
 
@@ -140,3 +139,10 @@ If you decide to do a more advanced optimization (like a 5 stage pipeline), ask 
 
 Keep notes of your architecture modifications in the process of optimization.
 Consider, but don't obsess, over area usage when optimizing (keep records though).
+
+## Testing
+
+To run all testbenches (except `synth_tb.vpd` since it's not required), use `python3 run_all_sims.py`. The program will print out `All tests passed!` if everything passes, and will exit after the first failed test if otherwise. The logs for all simulation output are stored in the `test_results` folder.
+
+If you have written any custom testbenches, feel free to add it to the script as well!
+
