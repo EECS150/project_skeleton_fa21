@@ -1,9 +1,10 @@
-#!/home/ff/eecs151/miniconda3/bin/python3
+#!/usr/bin/env python3
 
 from subprocess import run, CompletedProcess
 from os import remove, makedirs, path
 from shutil import rmtree
 from typing import Callable
+import argparse
 
 RESULT_DIR = "test_results"
 
@@ -29,6 +30,10 @@ def run_bench(
         ferr.write(stderr)
     if not success_cond(stdout):
         print(f"Failed")
+        print("stdout:")
+        print(stdout)
+        print("stderr:")
+        print(stderr)
         print(f"See {RESULT_DIR} for logs")
         exit(1)
     else:
@@ -78,10 +83,16 @@ def c_test_success_cond(_: str) -> bool:
     return True
 
 
-def silent_remove_factory(testbench) -> Callable[[], None]:
+def silent_remove_factory(testbench: str, simulator: str) -> Callable[[], None]:
     def foo():
         try:
-            remove(f"sim/{testbench}")
+            if simulator == "vcs":
+                remove(f"sim/{testbench}.tb")
+                remove(f"sim/{testbench}.vpd")
+            else:
+                remove(f"sim/{testbench}.tbi")
+                remove(f"sim/{testbench}.fst")
+            remove(f"sim/{testbench}.log")
         except OSError:
             pass
 
@@ -90,36 +101,40 @@ def silent_remove_factory(testbench) -> Callable[[], None]:
 
 def main():
     makedirs(RESULT_DIR, exist_ok=True)
+    parser = argparse.ArgumentParser(description="Run all RTL simulations and perform checks")
+    parser.add_argument("--simulator", type=str, choices=["vcs", "iverilog"], default="vcs", help="The RTL simulator to use")
+    args = parser.parse_args()
+    waveform_suffix = "vpd" if args.simulator == "vcs" else "fst"
     run_bench(
-        "sim/cpu_tb.vpd",
-        silent_remove_factory("cpu_tb.vpd"),
+        f"sim/cpu_tb.{waveform_suffix}",
+        silent_remove_factory("cpu_tb", args.simulator),
         lambda stdout: "All tests passed!" in stdout,
     )
     run_bench(
-        "sim/asm_tb.vpd",
-        silent_remove_factory("asm_tb.vpd"),
+        f"sim/asm_tb.{waveform_suffix}",
+        silent_remove_factory("asm_tb", args.simulator),
         lambda stdout: "ALL ASSEMBLY TESTS PASSED!" in stdout,
     )
     run_bench("isa-tests", cleanup_isa_tests, isa_test_success_cond)
     run_bench("c-tests", cleanup_c_tests, c_test_success_cond)
     run_bench(
-        "sim/echo_tb.vpd",
-        silent_remove_factory("echo_tb.vpd"),
+        f"sim/echo_tb.{waveform_suffix}",
+        silent_remove_factory("echo_tb", args.simulator),
         lambda stdout: "Test passed!" in stdout,
     )
     run_bench(
-        "sim/uart_parse_tb.vpd",
-        silent_remove_factory("uart_parse_tb.vpd"),
+        f"sim/uart_parse_tb.{waveform_suffix}",
+        silent_remove_factory("uart_parse_tb", args.simulator),
         lambda stdout: "CSR test PASSED! Strings matched." in stdout,
     )
     run_bench(
-        "sim/bios_tb.vpd",
-        silent_remove_factory("bios_tb.vpd"),
+        f"sim/bios_tb.{waveform_suffix}",
+        silent_remove_factory("bios_tb", args.simulator),
         lambda stdout: "BIOS testbench done! Num failed tests:          0" in stdout,
     )
     run_bench(
-        "sim/synth_top_tb.vpd",
-        silent_remove_factory("synth_top_tb.vpd"),
+        f"sim/synth_top_tb.{waveform_suffix}",
+        silent_remove_factory("synth_top_tb", args.simulator),
         lambda stdout: "failed" not in stdout,
     )
     print("All tests passed!")

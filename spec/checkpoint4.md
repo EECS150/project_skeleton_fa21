@@ -142,7 +142,8 @@ Consider, but don't obsess, over area usage when optimizing (keep records though
 
 ## Testing
 
-To run all testbenches (except `synth_tb.vpd` since it's not required), use `python3 run_all_sims.py`. The program will print out `All tests passed!` if everything passes, and will exit after the first failed test if otherwise. The logs for all simulation output are stored in the `test_results` folder.
+To run all testbenches (except `synth_tb.vpd` since it's not required), use `./run_all_sims`. The program will print out `All tests passed!` if everything passes, and will exit after the first failed test if otherwise. The logs for all simulation output are stored in the `test_results` folder.
 
 If you have written any custom testbenches, feel free to add it to the script as well!
 
+You can pass `--simulator iverilog` to `run_all_sims` to run the tests using Icarus Verilog.

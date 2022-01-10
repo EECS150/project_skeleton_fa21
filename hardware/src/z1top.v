@@ -100,12 +100,12 @@ module z1top #(
     ) cdc (
         .cpu_clk(cpu_clk),
         .synth_clk(pwm_clk),
-        .cpu_carrier_fcws(),
-        .cpu_mod_fcw(),
-        .cpu_mod_shift(),
-        .cpu_note_en(),
-        .cpu_synth_shift(),
-        .cpu_req(),
+        .cpu_carrier_fcws(24'd0),
+        .cpu_mod_fcw(24'd0),
+        .cpu_mod_shift(5'd0),
+        .cpu_note_en(1'd0),
+        .cpu_synth_shift(5'd0),
+        .cpu_req(1'd0),
         .cpu_ack(),
 
         .synth_carrier_fcws(),
@@ -120,28 +120,28 @@ module z1top #(
     ) synth (
         .clk(pwm_clk),
         .rst(pwm_rst),
-        .carrier_fcws(),
-        .mod_fcw(),
-        .mod_shift(),
-        .note_en(),
+        .carrier_fcws(24'd0),
+        .mod_fcw(24'd0),
+        .mod_shift(5'd0),
+        .note_en(1'd0),
         .sample(),
         .sample_valid(),
-        .sample_ready()
+        .sample_ready(1'd0)
     );
 
     scaler scaler (
         .clk(pwm_clk),
-        .synth_shift(),
-        .synth_out(),
+        .synth_shift(5'd0),
+        .synth_out(14'd0),
         .code()
     );
 
     sampler sampler (
         .clk(pwm_clk),
         .rst(pwm_rst),
-        .synth_valid(),
+        .synth_valid(1'd0),
         .synth_ready(),
-        .scaled_synth_code(),
+        .scaled_synth_code(10'd0),
         .pwm_out(pwm_out)
     );
 endmodule
