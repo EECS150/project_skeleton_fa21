@@ -19,7 +19,7 @@ module uart_parse_tb();
     .CPU_CLOCK_FREQ(CPU_CLOCK_FREQ),
     .RESET_PC(32'h1000_0000),
     .BAUD_RATE(BAUD_RATE)
-  ) CPU (
+  ) cpu (
     .clk(clk),
     .rst(rst),
     .serial_in(serial_in),   // input

@@ -11,7 +11,7 @@ module asm_tb();
 
   cpu # (
     .CPU_CLOCK_FREQ(CPU_CLOCK_FREQ)
-  ) CPU (
+  ) cpu (
     .clk(clk),
     .rst(rst),
     .serial_in(1'b1),
