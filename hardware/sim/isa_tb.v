@@ -14,7 +14,7 @@ module isa_tb();
   cpu # (
     .CPU_CLOCK_FREQ(CPU_CLOCK_FREQ),
     .RESET_PC(32'h1000_0000)
-  ) CPU (
+  ) cpu (
     .clk(clk),
     .rst(rst),
     .serial_in(1'b1),
